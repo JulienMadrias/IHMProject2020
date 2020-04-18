@@ -1,82 +1,112 @@
 package com.example.ihmproject;
 
-import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import org.osmdroid.api.IMapController;
-import org.osmdroid.config.Configuration;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.ItemizedIconOverlay;
-import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
-import org.osmdroid.views.overlay.OverlayItem;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+
+import org.osmdroid.config.Configuration;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
-public class MainActivity extends AppCompatActivity {
-    private MapView map;
+import com.google.android.material.navigation.NavigationView;
 
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,IButtonClickListener{
+
+    private DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        IMapController mapController;
-        ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
-
         super.onCreate(savedInstanceState);
         Configuration.getInstance().load(   getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) );
 
         setContentView(R.layout.activity_main);
 
-        map = findViewById(R.id.map);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.setBuiltInZoomControls(true);
-        map.setMultiTouchControls(true);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawerLayout = findViewById(R.id.drawer_layout);
 
-        mapController = map.getController();
-        mapController.setZoom(18.0);
-        GeoPoint startPoint = new GeoPoint(43.65020, 7.00517);
-        mapController.setCenter(startPoint);
-
-        ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-        OverlayItem home = new OverlayItem("F. Rallo", "nos bureaux", new GeoPoint(43.65020,7.00517));
-        Drawable m = home.getMarker(0);
-
-        items.add(home);
-        items.add(new OverlayItem("Resto", "chez babar", new GeoPoint(43.64950,7.00517))); // Lat/Lon decimal degrees
-
-        ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(this, items,
-                new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawerLayout, toolbar,
+                R.string.naviguation_drawer_open, R.string.naviguation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView mainNavigationView = (NavigationView) findViewById(R.id.main_nav_view);
+        mainNavigationView.setNavigationItemSelectedListener(this);
+        mainNavigationView.setOnContextClickListener(new View.OnContextClickListener() {
+            @Override
+            public boolean onContextClick(View v) {
+                Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+                ArrayAdapter<String> languagesAdapter = new ArrayAdapter<String>(MainActivity.this,
+                        android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.languages));
+                languagesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                if(languageSpinner != null)
+                    languageSpinner.setAdapter(languagesAdapter);
+                return false;
+            }
+        });/* reateContextMenuListener(
+               new View.OnCreateContextMenuListener() {
                     @Override
-                    public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                        return true;
+                    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                        Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
+                        ArrayAdapter<String> languagesAdapter = new ArrayAdapter<String>(MainActivity.this,
+                                android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.languages));
+                        languagesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        if(languageSpinner != null)
+                            languageSpinner.setAdapter(languagesAdapter);
                     }
-                    @Override
-                    public boolean onItemLongPress(final int index, final OverlayItem item) {
-                        return false;
-                    }
-                });
+                }
+        );*/
 
 
-        mOverlay.setFocusItemsOnTap(true);
-        map.getOverlays().add(mOverlay);
-
+        /*
+        */
+        if(savedInstanceState == null) startMapFragment();
     }
 
     @Override
     public void onResume(){
         super.onResume();
-        map.onResume();
+        // map.onResume();
     }
 
     @Override
     public void onPause(){
         super.onPause();
-        map.onPause();
+        // map.onPause();
     }
 
+    @Override
+    public void onBackPressed() {
+        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+    }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_transport_mode) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new ModeDeDeplacementFragment()).commit();
+        }
+        return true;
+    }
+    private void startMapFragment(){
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new MapFragment()).commit();
+    }
+    @Override
+    public void onCloseModeTransportButtonClicked(View v) {
+        startMapFragment();
+    }
 }

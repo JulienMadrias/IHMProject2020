@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">IHMProject</string>
+    <string name="naviguation_drawer_open">Open naviguation drawer</string>
+    <string name="naviguation_drawer_close">Close naviguation drawer</string>
+
+
+    <string-array name="languagesB">
+        <item>Français</item>
+        <item>English</item>
+        <item>Chinois</item>
+    </string-array>
 </resources>
