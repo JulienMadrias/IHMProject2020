@@ -3,6 +3,7 @@ package com.example.ihmproject;
 import android.preference.PreferenceManager;
 //import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -41,18 +42,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
         NavigationView mainNavigationView = (NavigationView) findViewById(R.id.main_nav_view);
         mainNavigationView.setNavigationItemSelectedListener(this);
-        mainNavigationView.setOnContextClickListener(new View.OnContextClickListener() {
-            @Override
-            public boolean onContextClick(View v) {
-                Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
-                ArrayAdapter<String> languagesAdapter = new ArrayAdapter<String>(MainActivity.this,
-                        android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.languages));
-                languagesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                if(languageSpinner != null)
-                    languageSpinner.setAdapter(languagesAdapter);
-                return false;
-            }
-        });/* reateContextMenuListener(
+        mainNavigationView.setOnCreateContextMenuListener(
                new View.OnCreateContextMenuListener() {
                     @Override
                     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -64,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             languageSpinner.setAdapter(languagesAdapter);
                     }
                 }
-        );*/
+        );
 
 
         /*

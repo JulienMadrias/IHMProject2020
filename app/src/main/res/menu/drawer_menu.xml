@@ -19,7 +19,7 @@
                 android:title="Mode de transport"/>
             <item android:id="@+id/language"
                 android:icon="@drawable/center"
-                android:title="Share"
+                android:title="Langue"
                 app:actionLayout="@layout/drop_down_list" >
 
             </item>
