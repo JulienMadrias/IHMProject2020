@@ -120,7 +120,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
                 case R.id.incidentButton:
-                Snackbar.make(v, "Button d'incident cliqué" + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
                 case R.id.accidentButton:
