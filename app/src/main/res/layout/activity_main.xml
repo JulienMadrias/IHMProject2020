@@ -26,7 +26,7 @@
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 <com.google.android.material.navigation.NavigationView
@@ -36,4 +36,14 @@
     android:id="@+id/main_nav_view"
     app:headerLayout="@layout/nav_header"
     app:menu="@menu/drawer_menu"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_add_circle_black_24dp"
+        android:contentDescription="ajouter"
+        android:layout_margin="16dp" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

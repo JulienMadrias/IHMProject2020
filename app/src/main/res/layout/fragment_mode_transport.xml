@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_pieton_button"
         android:layout_width="match_parent"
         android:layout_height="77dp"
@@ -10,9 +10,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
-        android:text="Piéton" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_directions_walk_black_24dp"
+        android:text="Piéton"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_cycliste_button"
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -20,9 +24,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
-        android:text="Cycliste" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_directions_bike_black_24dp"
+        android:text=" Cycliste"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_motard_button"
         android:layout_width="match_parent"
         android:layout_height="74dp"
@@ -30,7 +38,11 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="11dp"
         android:layout_marginEnd="3dp"
-        android:text="Motard" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_motorcycle_black_24dp"
+        android:text="  Motard"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/close_mode_transport"
@@ -39,9 +51,10 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="7dp"
         android:layout_marginEnd="3dp"
+        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
         android:text="Retour" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_passager_button"
         android:layout_width="match_parent"
         android:layout_height="74dp"
@@ -49,9 +62,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
-        android:text="Passager" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_local_taxi_black_24dp"
+        android:text=" Passager"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_automobiliste_button"
         android:layout_width="match_parent"
         android:layout_height="80dp"
@@ -59,9 +76,13 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
-        android:text="Automobiliste" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_directions_car_black_24dp"
+        android:text="  Automobiliste"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 
-    <ImageButton
+    <Button
         android:id="@+id/mode_bus_button"
         android:layout_width="match_parent"
         android:layout_height="68dp"
@@ -69,5 +90,9 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
-        android:text="Bus" />
+        android:background="#FFFFFF"
+        android:drawableStart="@drawable/ic_directions_bus_black_24dp"
+        android:text="  Bus"
+        android:textAlignment="viewStart"
+        android:textSize="20sp" />
 </RelativeLayout>
