@@ -21,7 +21,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -53,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return insets;
             }
         });
-        /*
-        */
+
         if(savedInstanceState == null) startMapFragment();
     }
 

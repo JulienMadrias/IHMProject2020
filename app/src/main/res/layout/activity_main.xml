@@ -44,6 +44,7 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_circle_black_24dp"
         android:contentDescription="ajouter"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        />
 
 </androidx.drawerlayout.widget.DrawerLayout>
