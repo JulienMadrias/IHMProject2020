@@ -1,10 +1,7 @@
 package com.example.ihmproject;
 
 import android.preference.PreferenceManager;
-//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowInsets;
@@ -21,11 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,IButtonClickListener{
 
