@@ -1,4 +1,4 @@
-package com.example.ihmproject2020;
+package com.example.ihmproject;
 
 import org.junit.Test;
 
