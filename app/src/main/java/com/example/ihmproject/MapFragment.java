@@ -103,11 +103,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.addAnEvent:
-                /*switch (((FloatingActionButton)v).getDrawable()){
-                    case R.drawable.ic_add_circle_black_24dp:
-                        break;
-
-                }*/
                 if(isAddEventsOpen){
                     eventAdder.setAnimation(floatButtonClose);
                     incidentButtonText.setVisibility(View.INVISIBLE);
@@ -125,21 +120,11 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
                 case R.id.incidentButton:
-                /*switch (((FloatingActionButton)v).getDrawable()){
-                    case R.drawable.ic_add_circle_black_24dp:
-                        break;
-
-                }*/
-                Snackbar.make(v, "incident " + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Button d'incident cliqué" + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
                 case R.id.accidentButton:
-                /*switch (((FloatingActionButton)v).getDrawable()){
-                    case R.drawable.ic_add_circle_black_24dp:
-                        break;
-
-                }*/
-                Snackbar.make(v, "accident " + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
         }
