@@ -1,14 +1,21 @@
 package com.example.ihmproject;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -20,13 +27,39 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements View.OnClickListener {
+    private FloatingActionButton eventAdder,incidentButton,accidentButton;
+    private TextView incidentButtonText, accidentButtonText;
+
+    private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose;
+
+    private boolean isAddEventsOpen;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         IMapController mapController;
         ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
+        eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
+        incidentButton = (FloatingActionButton) view.findViewById(R.id.incidentButton);
+        accidentButton = (FloatingActionButton) view.findViewById(R.id.accidentButton);
+        incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
+        accidentButtonText = (TextView) view.findViewById(R.id.accidentTextView);
+
+        eventAdder.setOnClickListener(this);
+        incidentButton.setOnClickListener(this);
+        accidentButton.setOnClickListener(this);
+
+        isAddEventsOpen = false;
+
+        Context context;
+        fabOpenAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_open);
+        fabCloseAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_close);
+        floatButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_open);
+        floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
+
         assert container != null;
         MapView map = view.findViewById(R.id.map);
         if(map != null){
@@ -64,5 +97,51 @@ public class MapFragment extends Fragment {
         }
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.addAnEvent:
+                /*switch (((FloatingActionButton)v).getDrawable()){
+                    case R.drawable.ic_add_circle_black_24dp:
+                        break;
+
+                }*/
+                if(isAddEventsOpen){
+                    eventAdder.setAnimation(floatButtonClose);
+                    incidentButtonText.setVisibility(View.INVISIBLE);
+                    accidentButtonText.setVisibility(View.INVISIBLE);
+                    incidentButton.setAnimation(fabCloseAnim);
+                    accidentButton.setAnimation(fabCloseAnim);
+                    isAddEventsOpen = false;
+                }else {
+                    eventAdder.setAnimation(floatButtonOpen);
+                    incidentButtonText.setVisibility(View.VISIBLE);
+                    accidentButtonText.setVisibility(View.VISIBLE);
+                    incidentButton.setAnimation(fabOpenAnim);
+                    accidentButton.setAnimation(fabOpenAnim);
+                    isAddEventsOpen = true;
+                }
+                break;
+                case R.id.incidentButton:
+                /*switch (((FloatingActionButton)v).getDrawable()){
+                    case R.drawable.ic_add_circle_black_24dp:
+                        break;
+
+                }*/
+                Snackbar.make(v, "incident " + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                break;
+                case R.id.accidentButton:
+                /*switch (((FloatingActionButton)v).getDrawable()){
+                    case R.drawable.ic_add_circle_black_24dp:
+                        break;
+
+                }*/
+                Snackbar.make(v, "accident " + ((FloatingActionButton)v).getDrawable(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                break;
+        }
     }
 }
