@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,14 +27,15 @@ import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
-
 public class MapFragment extends Fragment implements View.OnClickListener {
+
     private FloatingActionButton eventAdder,incidentButton,accidentButton;
     private TextView incidentButtonText, accidentButtonText;
 
     private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose;
 
     private boolean isAddEventsOpen;
+    private int notificationId = 0;
 
 
     @Nullable
@@ -122,11 +124,20 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 case R.id.incidentButton:
                 Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                sendNotificationOnChannel("title","message","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.accidentButton:
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
         }
+    }
+    public void sendNotificationOnChannel(String title,String message,String channelId, int priority){
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getActivity().getApplicationContext(),channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(priority);
+        ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
 }
