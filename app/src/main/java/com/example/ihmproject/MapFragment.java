@@ -1,7 +1,9 @@
 package com.example.ihmproject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 public class MapFragment extends Fragment implements View.OnClickListener {
 
-    private FloatingActionButton eventAdder,incidentButton,accidentButton;
+    private FloatingActionButton eventAdder,incidentButton,twitterButton,accidentButton;
     private TextView incidentButtonText, accidentButtonText;
 
     private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose;
@@ -47,12 +49,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
         incidentButton = (FloatingActionButton) view.findViewById(R.id.incidentButton);
         accidentButton = (FloatingActionButton) view.findViewById(R.id.accidentButton);
+        twitterButton = (FloatingActionButton) view.findViewById(R.id.twitterButton);
+
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
         accidentButtonText = (TextView) view.findViewById(R.id.accidentTextView);
 
         eventAdder.setOnClickListener(this);
         incidentButton.setOnClickListener(this);
         accidentButton.setOnClickListener(this);
+        twitterButton.setOnClickListener(this);
 
         isAddEventsOpen = false;
 
@@ -124,17 +129,32 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 case R.id.incidentButton:
                 Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                sendNotificationOnChannel("title","message","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre incident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.accidentButton:
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre accident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
+
+                break;
+                case R.id.twitterButton:
+                    Intent intent = null;
+                    try {
+                        // get the Twitter app if possible
+                        getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=EmmanuelMacron"));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    } catch (Exception e) {
+                        // no Twitter app, revert to browser
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/EmmanuelMacron"));
+                    }
+                    getActivity().startActivity(intent);
                 break;
         }
     }
     public void sendNotificationOnChannel(String title,String message,String channelId, int priority){
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getActivity().getApplicationContext(),channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(priority);
