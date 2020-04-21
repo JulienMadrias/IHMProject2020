@@ -2,6 +2,7 @@
     <string name="app_name">IHMProject</string>
     <string name="naviguation_drawer_open">Open naviguation drawer</string>
     <string name="naviguation_drawer_close">Close naviguation drawer</string>
+    <string name="cancel">Cancel</string>
 
 
     <string-array name="languagesB">
@@ -9,4 +10,7 @@
         <item>English</item>
         <item>Chinois</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

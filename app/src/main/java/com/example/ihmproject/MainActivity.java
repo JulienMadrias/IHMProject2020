@@ -1,5 +1,6 @@
 package com.example.ihmproject;
 
+import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,8 +22,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,IButtonClickListener{
-
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
+    private Intent intent;
     private DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,5 +101,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onCloseModeTransportButtonClicked(View v) {
         startMapFragment();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void mapIntentButtonClicked(View v) {
+        switch(v.getId()){
+            case R.id.incidentButton : intent = new Intent(this, IncidentActivity.class); break;
+            case R.id.accidentButton: intent = new Intent(this, AccidentActivity.class); break;
+        }
+        if(intent != null)
+        startActivity(intent);
     }
 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
+    android:id="@+id/incidentLayout"
+    tools:context=".IncidentActivity">
+
+    <Button
+        android:id="@+id/incidentToMain"
+        android:layout_width="114dp"
+        android:layout_weight="13"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        android:text="Retour" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:fontFamily="@font/abril_fatface"
+        android:text="Incident"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:fontFamily="@font/amiri"
+        android:text="Moyen de transport concerné:"
+        android:textAlignment="viewStart"
+        android:textSize="24sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="11"
+        android:layout_height="0dp"
+        android:weightSum="100"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="16.16"
+            android:layout_height="match_parent"
+            android:text="Piéton"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="16.16"
+            android:text="Vélo" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="16.16"
+            android:text="Moto" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="16.16"
+            android:layout_height="match_parent"
+            android:text="Voiture"
+            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="16.16"
+            android:text="Bus" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="16.16"
+            android:text="Camion" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_weight="12"
+        android:layout_height="0dp"
+        android:weightSum="100"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:fontFamily="@font/abril_fatface"
+            android:paddingTop="10dp"
+            android:text="Ajouter des photos"
+            android:textAlignment="center"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/add_incident_photo"
+            android:background="@drawable/ic_add_white_24dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="12"
+            android:drawableStart="@drawable/ic_add_circle_black_24dp" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="422dp"
+        android:layout_height="125dp"
+        android:fontFamily="@font/amiri"
+        android:text="Information Supplémntaire:"
+        android:textAlignment="viewStart"
+        android:textSize="24sp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="40"
+        android:ems="10"
+        android:gravity="start|top"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

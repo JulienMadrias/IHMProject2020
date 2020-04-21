@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="100"
+    android:id="@+id/add_photo_view"
+    tools:context=".AddPhotoDialog">
+
+    <ImageButton
+        android:id="@+id/picture_from_camera"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="50"
+        android:background="@drawable/fab_add_photo_background"
+        android:src="@drawable/picture_from_camera" />
+
+    <ImageButton
+        android:id="@+id/import_pictures"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_weight="50"
+        android:background="@drawable/fab_add_photo_background"
+        android:src="@drawable/import_pictures" />
+
+</LinearLayout>

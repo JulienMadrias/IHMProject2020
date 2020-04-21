@@ -31,6 +31,8 @@ import org.osmdroid.views.overlay.OverlayItem;
 import java.util.ArrayList;
 public class MapFragment extends Fragment implements View.OnClickListener {
 
+
+
     private FloatingActionButton eventAdder,incidentButton,twitterButton,accidentButton;
     private TextView incidentButtonText, accidentButtonText;
 
@@ -39,6 +41,12 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private boolean isAddEventsOpen;
     private int notificationId = 0;
 
+    private IButtonMapListener mCallBack;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mCallBack = (IButtonMapListener)getActivity();
+    }
 
     @Nullable
     @Override
@@ -127,15 +135,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
                 case R.id.incidentButton:
-                Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre incident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                /* Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show(); */
+                mCallBack.mapIntentButtonClicked(v);
+                // sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre incident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.accidentButton:
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre accident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
-
                 break;
                 case R.id.twitterButton:
                     Intent intent = null;

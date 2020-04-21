@@ -23,11 +23,11 @@ public class ModeDeDeplacementFragment extends Fragment implements View.OnClickL
         // Required empty public constructor
     }
 
-    private IButtonClickListener mCallBack;
+    private IButtonDrawerClickListener mCallBack;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        mCallBack = (IButtonClickListener)getActivity();
+        mCallBack = (IButtonDrawerClickListener)getActivity();
     }
 
     @Nullable
