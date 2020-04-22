@@ -12,14 +12,15 @@
     <Button
         android:id="@+id/incidentToMain"
         android:layout_width="114dp"
-        android:layout_weight="13"
+        android:layout_weight="7"
         android:layout_height="0dp"
         android:layout_margin="15dp"
         android:text="Retour" />
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="0dp"
+        android:layout_weight="6"
         android:fontFamily="@font/abril_fatface"
         android:text="Incident"
         android:textAlignment="center"
@@ -27,7 +28,8 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="0dp"
+        android:layout_weight="5"
         android:fontFamily="@font/amiri"
         android:text="Moyen de transport concerné:"
         android:textAlignment="viewStart"
@@ -35,7 +37,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="11"
+        android:layout_weight="9"
         android:layout_height="0dp"
         android:weightSum="100"
         android:orientation="horizontal">
@@ -74,7 +76,7 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="12"
+        android:layout_weight="5"
         android:layout_height="0dp"
         android:weightSum="100"
         android:orientation="horizontal">
@@ -98,11 +100,19 @@
             android:drawableStart="@drawable/ic_add_circle_black_24dp" />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/fragment_picture_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45">
+    </FrameLayout>
+
     <TextView
-        android:layout_width="422dp"
-        android:layout_height="125dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
         android:fontFamily="@font/amiri"
-        android:text="Information Supplémntaire:"
+        android:text="Information Supplémentaire:"
         android:textAlignment="viewStart"
         android:textSize="24sp" />
 
@@ -110,7 +120,7 @@
         android:id="@+id/editText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="40"
+        android:layout_weight="15"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />

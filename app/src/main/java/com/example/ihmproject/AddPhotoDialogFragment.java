@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddPhotoDialog#newInstance} factory method to
+ * Use the {@link AddPhotoDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddPhotoDialog extends Fragment {
+public class AddPhotoDialogFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +30,7 @@ public class AddPhotoDialog extends Fragment {
 
     IPhotoDialogListener mCallBack;
 
-    public AddPhotoDialog() {
+    public AddPhotoDialogFragment() {
         // Required empty public constructor
     }
 
@@ -62,11 +62,11 @@ public class AddPhotoDialog extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddPhotoDialog.
+     * @return A new instance of fragment AddPhotoDialogFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddPhotoDialog newInstance(String param1, String param2) {
-        AddPhotoDialog fragment = new AddPhotoDialog();
+    public static AddPhotoDialogFragment newInstance(String param1, String param2) {
+        AddPhotoDialogFragment fragment = new AddPhotoDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

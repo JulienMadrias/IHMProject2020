@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:weightSum="100"
     android:id="@+id/add_photo_view"
-    tools:context=".AddPhotoDialog">
+    tools:context=".AddPhotoDialogFragment">
 
     <ImageButton
         android:id="@+id/picture_from_camera"
