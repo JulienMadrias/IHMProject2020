@@ -21,8 +21,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.ArrayList;
+
+import characters.PostImage;
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
+    public static ArrayList<PostImage> listOfPostImages;
     private Intent intent;
     private DrawerLayout drawerLayout;
     @Override
