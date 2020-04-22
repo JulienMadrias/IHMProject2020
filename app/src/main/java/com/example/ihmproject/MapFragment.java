@@ -84,15 +84,15 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
             mapController = map.getController();
             mapController.setZoom(18.0);
-            GeoPoint startPoint = new GeoPoint(43.65020, 7.00517);
+            GeoPoint startPoint = new GeoPoint(43.615102, 7.080124);
             mapController.setCenter(startPoint);
 
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-            OverlayItem home = new OverlayItem("F. Rallo", "nos bureaux", new GeoPoint(43.65020,7.00517));
-            Drawable m = home.getMarker(0);
+            OverlayItem incident = new OverlayItem("Trafic arreté", "bus à l'arrêt", new GeoPoint(43.615102,7.080124));
+            Drawable m = incident.getMarker(0);
 
-            items.add(home);
-            items.add(new OverlayItem("Resto", "chez babar", new GeoPoint(43.64950,7.00517))); // Lat/Lon decimal degrees
+            items.add(incident);
+
 
             ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
