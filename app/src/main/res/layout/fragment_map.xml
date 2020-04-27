@@ -1,8 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent">
+
     <org.osmdroid.views.MapView
         android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+    </org.osmdroid.views.MapView>
+
+    <TextView
+        android:id="@+id/accidentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/fab_text_background"
+        android:fontFamily="@font/raleway_semibold"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible"
+        android:text="Accident"
+        app:layout_constraintBottom_toTopOf="@+id/incidentButton"
+        app:layout_constraintEnd_toStartOf="@+id/accidentButton"
+        app:layout_constraintTop_toTopOf="@+id/accidentButton" />
+
+    <TextView
+        android:id="@+id/incidentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/fab_text_background"
+        android:fontFamily="@font/raleway_semibold"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible"
+        android:text="Incident"
+        app:layout_constraintBottom_toTopOf="@+id/addAnEvent"
+        app:layout_constraintEnd_toStartOf="@+id/incidentButton"
+        app:layout_constraintTop_toTopOf="@+id/incidentButton" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addAnEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="ajouter"
+        android:src="@drawable/ic_add_white_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/incidentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/mr_cast_meta_default_text_color"
+        android:contentDescription="incident"
+        android:src="@drawable/ic_traffic_jam_svgrepo_com"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/addAnEvent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/accidentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/mr_cast_meta_default_text_color"
+        android:contentDescription="accident"
+        android:src="@drawable/ic_accident_svgrepo_com"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/incidentButton"
+        app:layout_constraintEnd_toEndOf="parent" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/twitterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/mr_cast_meta_default_text_color"
+        android:contentDescription="twitter"
+        android:src="@drawable/twitter"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

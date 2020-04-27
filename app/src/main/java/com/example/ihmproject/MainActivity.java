@@ -1,10 +1,8 @@
 package com.example.ihmproject;
 
+import android.content.Intent;
 import android.preference.PreferenceManager;
-//import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.DragEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowInsets;
@@ -21,14 +19,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,IButtonClickListener{
+import characters.PostImage;
 
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
+    public static ArrayList<PostImage> listOfPostImages;
+    private Intent intent;
     private DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,5 +106,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onCloseModeTransportButtonClicked(View v) {
         startMapFragment();
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public void mapIntentButtonClicked(View v) {
+        switch(v.getId()){
+            case R.id.incidentButton : intent = new Intent(this, IncidentActivity.class); break;
+            case R.id.accidentButton: intent = new Intent(this, AccidentActivity.class); break;
+        }
+        if(intent != null)
+        startActivity(intent);
     }
 }

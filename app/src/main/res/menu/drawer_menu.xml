@@ -27,6 +27,10 @@
                 android:id="@+id/Colorblind_mode"
                 android:title="Mode Daltonien"
                 app:actionLayout="@layout/switch_item" />
+
+
+
         </menu>
     </item>
+
 </menu>
