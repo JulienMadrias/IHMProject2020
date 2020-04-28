@@ -3,7 +3,7 @@ package com.example.ihmproject.alertfactory;
 public class Alert {
     private int longitude;
     private int latitude;
-    private int type;
+    private int type; //1==incident, 2==accident
     private String title;
     private String description;
 

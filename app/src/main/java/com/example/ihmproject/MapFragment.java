@@ -20,6 +20,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
@@ -28,6 +31,8 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.OverlayItem;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 public class MapFragment extends Fragment implements View.OnClickListener {
 
@@ -42,6 +47,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     private int notificationId = 0;
 
     private IButtonMapListener mCallBack;
+
+    private String JSONFILE = "" ;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -88,11 +96,16 @@ public class MapFragment extends Fragment implements View.OnClickListener {
             mapController.setCenter(startPoint);
 
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-            OverlayItem incident = new OverlayItem("Trafic arreté", "bus à l'arrêt", new GeoPoint(43.615102,7.080124));
-            Drawable m = incident.getMarker(0);
-
-            items.add(incident);
-
+            try {
+                JSONArray jsonArray = new JSONArray(loadJSONFromAsset());
+                for(int i=0;i<jsonArray.length();i++){
+                    JSONObject alerts = jsonArray.getJSONObject(i);
+                    OverlayItem alert = new OverlayItem(alerts.getString("title"),alerts.getString("description"), new GeoPoint(alerts.getDouble("latitude"),alerts.getDouble("longitude")));
+                    items.add(alert);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -167,5 +180,30 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 .setContentText(message)
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
+    }
+
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+
+            InputStream is = getContext().getAssets().open("alerts.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+
+            is.read(buffer);
+
+            is.close();
+
+            json = new String(buffer, "UTF-8");
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
     }
 }
