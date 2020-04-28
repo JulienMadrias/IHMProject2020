@@ -1,4 +1,4 @@
-package characters;
+package PostImage;
 
 import java.util.ArrayList;
 

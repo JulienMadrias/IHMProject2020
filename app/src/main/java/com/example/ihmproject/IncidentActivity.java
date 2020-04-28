@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,16 +28,18 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity {
+public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, com.example.ihmproject.IStorageActivity {
     private Intent intent;
     ImageView imageView;
     private Bitmap picture;
     private PictureFragment pictureFragment;
+    private StorageFragment storageFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incident);
         createPictureFragment();
+        createStorageFragment();
         ((Button)findViewById(R.id.incidentToMain)).setOnClickListener(this);
         ((Button)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
     }
@@ -46,6 +49,16 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
             pictureFragment = new PictureFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_picture_container,pictureFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+    }
+    private void createStorageFragment(){
+        storageFragment = (StorageFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_storage_control);
+        if(storageFragment == null){
+            storageFragment = new StorageFragment(this);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_storage_control_container,storageFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }
@@ -141,10 +154,25 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         switch (requestCode){
             case REQUEST_CAMERA:
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this,"Permission acceptée",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Autorisation Camera acceptée",Toast.LENGTH_SHORT).show();
                     takePicture();
                 }else{
-                    Toast.makeText(this,"Permission refusée",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Autorisation Camera refusée",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_MEDIA_WRITE:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    storageFragment.saveToInternalStorage(picture);
+                    Toast.makeText(this,"Permission d'écriture acceptée",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this,"Permission d'écriture refusée",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case REQUEST_MEDIA_READ:
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(this,"Permission de lecture acceptée",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(this,"Permission de lecture refusée",Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -159,6 +187,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        storageFragment.setEnableSaveButton();
         if( requestCode == REQUEST_CAMERA){
             if(resultCode == RESULT_OK){
                 picture = (Bitmap) data.getExtras().get("data");
@@ -173,5 +202,15 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
             }
             //pictureFragment.setImage(picture);
         }
+    }
+
+    @Override
+    public void onPictureLoad(Bitmap bitmap) {
+        pictureFragment.setImage(bitmap);
+    }
+
+    @Override
+    public Bitmap getPictureToSave() {
+        return picture;
     }
 }
