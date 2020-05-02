@@ -1,4 +1,4 @@
-package com.example.ihmproject;
+package Fragment;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -19,6 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import Interface.IStorageActivity;
+import com.example.ihmproject.R;
 
 import java.io.File;
 import java.io.FileInputStream;

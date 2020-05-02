@@ -9,18 +9,15 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +25,14 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, com.example.ihmproject.IStorageActivity {
+import Fragment.PictureFragment;
+import Fragment.StorageFragment;
+import Interface.IButtonIncidentListener;
+import Interface.IPhotoDialogListener;
+import Interface.IPictureActivity;
+import Interface.IStorageActivity;
+
+public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity {
     private Intent intent;
     ImageView imageView;
     private Bitmap picture;

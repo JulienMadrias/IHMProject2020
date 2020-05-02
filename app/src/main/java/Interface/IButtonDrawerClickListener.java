@@ -1,4 +1,4 @@
-package com.example.ihmproject;
+package Interface;
 
 import android.view.View;
 

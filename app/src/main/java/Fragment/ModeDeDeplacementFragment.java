@@ -1,4 +1,4 @@
-package com.example.ihmproject;
+package Fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import Interface.IButtonDrawerClickListener;
+import com.example.ihmproject.R;
 
 public class ModeDeDeplacementFragment extends Fragment implements View.OnClickListener {
     private Button auto,motard,cycliste,passager,pieton,bus;

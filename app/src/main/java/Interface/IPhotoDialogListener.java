@@ -1,4 +1,4 @@
-package com.example.ihmproject;
+package Interface;
 
 import androidx.fragment.app.DialogFragment;
 
