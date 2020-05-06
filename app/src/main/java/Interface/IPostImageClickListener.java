@@ -1,5 +1,6 @@
 package Interface;
 
 public interface IPostImageClickListener {
-    void onCharacterClicked(int position);
+    void onPostImageClicked(int position);
+    void incrementImageTotal();
 }

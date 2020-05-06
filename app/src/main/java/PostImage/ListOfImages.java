@@ -8,7 +8,7 @@ import java.util.ArrayList;
  *  * version 1
  */
 public final class ListOfImages extends ArrayList<PostImage> {
-
+    public static ArrayList<PostImage> listOfPostImages= new ArrayList<>();
     public ListOfImages(){
         super();
         // add( new PostImage( "Amidala", "La jeune femme forte", R.drawable.amidala ));

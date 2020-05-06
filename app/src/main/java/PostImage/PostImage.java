@@ -16,7 +16,7 @@ public class PostImage implements Serializable {
      * constructeur normal
      * @param picture of diploma
      */
-    PostImage(Bitmap picture) {
+    public PostImage(Bitmap picture) {
         this.picture = picture;
     }
 
