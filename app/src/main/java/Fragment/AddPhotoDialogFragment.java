@@ -1,19 +1,29 @@
 package Fragment;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import Interface.IPhotoDialogListener;
+import Interface.IPictureActivity;
+
 import com.example.ihmproject.R;
+import com.google.android.material.snackbar.Snackbar;
+
+import org.xmlpull.v1.XmlPullParser;
 
 
 /**
@@ -21,7 +31,7 @@ import com.example.ihmproject.R;
  * Use the {@link AddPhotoDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddPhotoDialogFragment extends Fragment {
+public class AddPhotoDialogFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,16 +41,19 @@ public class AddPhotoDialogFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    IPhotoDialogListener mCallBack;
+    private IPhotoDialogListener mCallBack;
 
     public AddPhotoDialogFragment() {
         // Required empty public constructor
+    }
+    public AddPhotoDialogFragment(IPhotoDialogListener mCallBack) {
+        // Required empty public constructor
+        this.mCallBack = mCallBack;
     }
 
     @Nullable
     @Override
     public View getView() {
-        Log.d("jiv","iciiiiii");
         return view;
     }
 
@@ -50,7 +63,7 @@ public class AddPhotoDialogFragment extends Fragment {
         // Verify that the host activity implements the callback interface
         try {
             // Instantiate the NoticeDialogListener so we can send events to the host
-            mCallBack = (IPhotoDialogListener) context;
+            mCallBack = (IPhotoDialogListener) getActivity();
         } catch (ClassCastException e) {
             // The activity doesn't implement the interface, throw exception
             throw new ClassCastException(getActivity().toString()
@@ -90,7 +103,30 @@ public class AddPhotoDialogFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_add_photo_dialog, container, false);
+        view = getThisView(inflater,container);
         return view;
+    }
+
+    public View getThisView(LayoutInflater inflater){
+        return getThisView(inflater,null);
+    }
+    public View getThisView(LayoutInflater inflater,  ViewGroup container){
+        View view = container != null?  inflater.inflate(R.layout.fragment_add_photo_dialog, container, false):
+                inflater.inflate(R.layout.fragment_add_photo_dialog, null);
+        ((ImageButton)view.findViewById(R.id.picture_from_camera)).setOnClickListener(this);
+        ((ImageButton)view.findViewById(R.id.import_pictures)).setOnClickListener(this);
+        return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.picture_from_camera:
+                mCallBack.onPhotoClik();
+                break;
+            case R.id.import_pictures:
+                mCallBack.onImportPhotoClick();
+                break;
+        }
     }
 }

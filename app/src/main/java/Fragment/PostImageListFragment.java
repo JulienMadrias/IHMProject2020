@@ -1,4 +1,4 @@
-package PostImage;
+package Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,11 +11,16 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ihmproject.MainActivity;
 import com.example.ihmproject.R;
 
 import java.util.ArrayList;
+
+import Interface.IPostImageClickListener;
+import PostImage.PostImage;
 
 
 /**
@@ -76,18 +81,26 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_image_list, container, false);
-        final ListView mListView=(ListView) rootView.findViewById(R.id.imagesPostList);
-
+        final RecyclerView mListView=(RecyclerView) rootView.findViewById(R.id.imagesPostList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rootView.findViewById(R.id.imagesPostList);
         ArrayList<String> values = new ArrayList<>();
-        for (PostImage postImage : MainActivity.listOfPostImages
-             ) values.add("                                             "+ postImage.getPicture()+"                                             ");
+        for (PostImage postImage : MainActivity.listOfPostImages)
+            values.add("                                             "+ postImage.getPicture()+"                                             ");
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView.getContext(),
                 android.R.layout.simple_list_item_1, values);
+/*
+        ArrayList<Item> listItem = getListItem();
+        itemAdapter = new ItemAdapter(listItem getContext());
+
+
         mListView.setAdapter(adapter);
 
         mListView.setOnItemClickListener(this);
+
+ */
         /*
         new AdapterView.OnItemClickListener() {
             @Override

@@ -3,7 +3,7 @@ package Interface;
 import androidx.fragment.app.DialogFragment;
 
 public interface IPhotoDialogListener {
-    public void onPhotoClik(DialogFragment dialog);
-    public void onImportPhotoClick(DialogFragment dialog);
-    public void onCancel(DialogFragment dialog);
+    public void onPhotoClik();
+    public void onImportPhotoClick();
+    public void onCancel();
 }

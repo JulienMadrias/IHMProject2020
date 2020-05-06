@@ -1,4 +1,4 @@
-package PostImage;
+package Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ihmproject.MainActivity;
 import com.example.ihmproject.R;
+
+import Interface.IPostImageArguments;
+import Interface.IPostImageDetailClickListener;
+import PostImage.PostImage;
 
 
 /**
