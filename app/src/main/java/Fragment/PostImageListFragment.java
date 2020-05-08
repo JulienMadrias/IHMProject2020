@@ -1,21 +1,27 @@
-package PostImage;
+package Fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ihmproject.MainActivity;
 import com.example.ihmproject.R;
 
 import java.util.ArrayList;
+
+import Interface.IPostImageClickListener;
+import PostImage.*;
 
 
 /**
@@ -33,6 +39,8 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
     private String mParam1;
     private String mParam2;
     private View rootView;
+    private RecyclerView recyclerView;
+    private TextView picturesCountShower;
     public PostImageListFragment() {
         // Required empty public constructor
     }
@@ -69,25 +77,32 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    public void addNewPostImage(Bitmap bitmap){
+        ListOfImages.listOfPostImages.add(new PostImage(bitmap));
+        resetPostImageList();
+    }
+    private void resetPostImageList(){
+        recyclerView=(RecyclerView) rootView.findViewById(R.id.imagesPostList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rootView.findViewById(R.id.imagesPostList);
+        final PostImageAdapter postImageAdatper = new PostImageAdapter(ListOfImages.listOfPostImages,getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(postImageAdatper);
+        mCallBack.incrementImageTotal();
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_image_list, container, false);
-        final ListView mListView=(ListView) rootView.findViewById(R.id.imagesPostList);
-
-        rootView.findViewById(R.id.imagesPostList);
-        ArrayList<String> values = new ArrayList<>();
-        for (PostImage postImage : MainActivity.listOfPostImages
-             ) values.add("                                             "+ postImage.getPicture()+"                                             ");
-
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(rootView.getContext(),
-                android.R.layout.simple_list_item_1, values);
+        Log.d("jiv", "onCreateView: picture"+picturesCountShower);
+        resetPostImageList();
+/*
         mListView.setAdapter(adapter);
-
         mListView.setOnItemClickListener(this);
+ */
         /*
         new AdapterView.OnItemClickListener() {
             @Override
@@ -102,6 +117,6 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mCallBack.onCharacterClicked(position);
+        mCallBack.onPostImageClicked(position);
     }
 }

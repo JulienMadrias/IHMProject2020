@@ -1,4 +1,4 @@
-package PostImage;
+package Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.ihmproject.MainActivity;
 import com.example.ihmproject.R;
+
+import Interface.IPostImageArguments;
+import Interface.IPostImageDetailClickListener;
+import PostImage.*;
 
 
 /**
@@ -72,7 +76,7 @@ public class PostImageDetailFragment extends Fragment implements IPostImageArgum
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_picture, container, false);
         assert getArguments() != null;
-        PostImage postImage = MainActivity.listOfPostImages.get(getArguments().getInt(fragmentParam));
+        PostImage postImage = ListOfImages.listOfPostImages.get(getArguments().getInt(fragmentParam));
         ((ImageView)rootView.findViewById(R.id.imageTaken)).setImageBitmap(postImage.getPicture());
         return rootView;
     }

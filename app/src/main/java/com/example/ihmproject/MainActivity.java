@@ -38,7 +38,6 @@ import PostImage.PostImage;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
-    public static ArrayList<PostImage> listOfPostImages;
     private Intent intent;
     private DrawerLayout drawerLayout;
     private boolean permissionGranted;

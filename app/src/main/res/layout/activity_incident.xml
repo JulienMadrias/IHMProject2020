@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6"
+        android:layout_weight="4"
         android:fontFamily="@font/abril_fatface"
         android:text="Incident"
         android:textAlignment="center"
@@ -29,50 +29,60 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
+        android:layout_weight="7"
         android:fontFamily="@font/amiri"
         android:text="Moyen de transport concerné:"
         android:textAlignment="viewStart"
         android:textSize="24sp" />
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_weight="9"
-        android:layout_height="0dp"
-        android:weightSum="100"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="16.16"
-            android:layout_height="match_parent"
-            android:text="Piéton"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="16.16"
-            android:text="Vélo" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="16.16"
-            android:text="Moto" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="16.16"
-            android:layout_height="match_parent"
-            android:text="Voiture"
-            />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="16.16"
-            android:text="Bus" />
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="16.16"
-            android:text="Camion" />
+    android:layout_weight="9"
+    android:layout_height="0dp"
+    android:weightSum="100"
+        android:layout_marginTop="25dp">
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/horizontalScrollView">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Piéton"
+                    android:id="@+id/pietonButton" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Vélo"
+                    android:id="@+id/veloButton" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Moto"
+                    android:id="@+id/motoButton" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Voiture"
+                    android:id="@+id/voitureButton" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bus"
+                    android:id="@+id/busButton" />
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Camion"
+                    android:id="@+id/camionButton" />
+            </LinearLayout>
+
+        </HorizontalScrollView>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +96,7 @@
             android:layout_height="match_parent"
             android:layout_weight="50"
             android:fontFamily="@font/abril_fatface"
-            android:paddingTop="10dp"
+            android:paddingTop="3dp"
             android:text="Ajouter des photos"
             android:textAlignment="center"
             android:textSize="17sp" />
@@ -98,20 +108,38 @@
             android:layout_height="match_parent"
             android:layout_weight="12"
             android:drawableStart="@drawable/ic_add_circle_black_24dp" />
-
-        <FrameLayout
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="27"
+            android:fontFamily="@font/abril_fatface"
+            android:paddingTop="3dp"
+            android:textAlignment="center"
+            android:textSize="17sp"
+            android:text="total: "
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/picturesCountShower"
+            android:layout_width="0dp"
+            android:layout_weight="11"
+            android:text="0"
+            android:fontFamily="@font/abril_fatface"
+            android:paddingTop="3dp"
+            android:textAlignment="center"
+            android:textSize="17sp"
+            android:layout_height="match_parent"/>
+        <!--<FrameLayout
             android:id="@+id/fragment_storage_control_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="38">
-        </FrameLayout>
+        </FrameLayout>-->
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/fragment_picture_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="45">
+        android:layout_weight="35">
     </FrameLayout>
 
     <TextView
@@ -131,5 +159,11 @@
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
+    <Button
+        android:id="@+id/publishIncidentButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Publier"
+        android:layout_weight="10"/>
 
 </LinearLayout>
