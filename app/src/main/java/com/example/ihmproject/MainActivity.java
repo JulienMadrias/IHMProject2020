@@ -1,6 +1,11 @@
 package com.example.ihmproject;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -8,6 +13,7 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -16,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import org.osmdroid.config.Configuration;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -34,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static ArrayList<PostImage> listOfPostImages;
     private Intent intent;
     private DrawerLayout drawerLayout;
+    private boolean permissionGranted;
+    private Location currentLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +102,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new ModeDeDeplacementFragment()).commit();
             drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        if(menuItem.getItemId() == R.id.SwitchGPS) {
+            permissionGranted = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+            if (!permissionGranted) {
+
+            }
+            if (permissionGranted) {
+            }
         }
         return true;
     }

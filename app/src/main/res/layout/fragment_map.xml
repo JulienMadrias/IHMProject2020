@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp">
+
     </org.osmdroid.views.MapView>
 
     <TextView
@@ -45,11 +46,11 @@
         app:layout_constraintBottom_toTopOf="@+id/addAnEvent"
         app:layout_constraintEnd_toStartOf="@+id/incidentButton"
         app:layout_constraintTop_toTopOf="@+id/incidentButton" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAnEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorPrimary"
         android:contentDescription="ajouter"
@@ -96,4 +97,21 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/centerPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="center"
+        android:clickable="true"
+        android:visibility="visible"
+        android:src="@drawable/ic_menu_mylocation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

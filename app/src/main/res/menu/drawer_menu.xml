@@ -24,9 +24,12 @@
 
             </item>
             <item
-                android:id="@+id/Colorblind_mode"
-                android:title="Mode Daltonien"
-                app:actionLayout="@layout/switch_item" />
+                android:id="@+id/SwitchGPS"
+                android:title="Activer GPS"
+                >
+            </item>
+
+
 
 
 
