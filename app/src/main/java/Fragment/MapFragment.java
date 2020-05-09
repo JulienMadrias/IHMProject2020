@@ -62,7 +62,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private FloatingActionButton eventAdder,incidentButton,twitterButton,accidentButton,centerMapButton;
     private TextView incidentButtonText, accidentButtonText;
 
-    private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose;
+    private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose, centerButtonOpen, centerButtonClose;
 
     private boolean isAddEventsOpen;
     private int notificationId = 0;
@@ -114,6 +114,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         fabCloseAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_close);
         floatButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_open);
         floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
+        centerButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_opened);
+        centerButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_closed);
 
         boolean permissionGranted = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         if (permissionGranted) {
@@ -192,7 +194,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             map.getOverlays().add(mOverlay);
             // askGpsPermission();
         }
-
         return view;
     }
     public void closeEventAdder(){
@@ -202,6 +203,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             accidentButtonText.setVisibility(View.INVISIBLE);
             incidentButton.setAnimation(fabCloseAnim);
             accidentButton.setAnimation(fabCloseAnim);
+            //centerMapButton.setAnimation(centerButtonClose);
             isAddEventsOpen = false;
         }
     }
@@ -212,32 +214,36 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             accidentButtonText.setVisibility(View.VISIBLE);
             incidentButton.setAnimation(fabOpenAnim);
             accidentButton.setAnimation(fabOpenAnim);
+            //centerMapButton.setAnimation(centerButtonOpen);
             isAddEventsOpen = true;
         }
     }
     @Override
     public void onClick(View v) {
-        closeEventAdder();
         switch (v.getId()){
             case R.id.addAnEvent:
                 if(isAddEventsOpen){
                     closeEventAdder();
-                }else {
-                    openEventAdder();
-                }
+                }else openEventAdder();
                 break;
                 case R.id.incidentButton:
+                    here:
                 /* Snackbar.make(v, "Button d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show(); */
+                    closeEventAdder();
                 mCallBack.mapIntentButtonClicked(v);
                 // sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre incident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.accidentButton:
+                    closeEventAdder();
+                    mCallBack.mapIntentButtonClicked(v);
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre accident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.twitterButton:
+
+                    closeEventAdder();
                     Intent intent = null;
                     try {
                         // get the Twitter app if possible
@@ -251,6 +257,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     getActivity().startActivity(intent);
                 break;
             case R.id.centerPosition:
+                Snackbar.make(v, "Location Center", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                closeEventAdder();
                 if(currentLocation!= null){
                 map.setExpectedCenter(new GeoPoint(getLatitude(),getLongitude()));}
                 break;
