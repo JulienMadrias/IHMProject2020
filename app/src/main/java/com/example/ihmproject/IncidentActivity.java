@@ -26,11 +26,13 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import Fragment.AddPhotoDialogFragment;
 import Fragment.PictureFragment;
@@ -61,11 +63,13 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         //createPictureFragment();
         createPostImageListFragment();
         // createStorageFragment();
+        //Objects.requireNonNull(getActionBar()).setTitle("Incident");
+        //Objects.requireNonNull(getSupportActionBar()).setTitle("Incident");
         pictureTotalShower = (TextView) findViewById(R.id.picturesCountShower);
-        ((Button)findViewById(R.id.incidentToMain)).setOnClickListener(this);
         ((Button)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
         ((Button)findViewById(R.id.publishIncidentButton)).setOnClickListener(this);
-
+        getSupportActionBar().setTitle("Incident");
+        //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
     }
     private void createPostImageListFragment(){
         postImageListFragment = (PostImageListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_image_list);
@@ -101,14 +105,13 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.incidentToMain: finish(); break;
             case R.id.add_incident_photo:
                 Snackbar.make(v, "Boutton d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 photoImportChoiceDialog();
                 break;
             case R.id.publishIncidentButton:
-                Toast.makeText(this,"Votre incident sera très bientôt publié.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"l'incident sera très bientôt publié.",Toast.LENGTH_SHORT).show();
                 finish();
         }
     }
@@ -261,4 +264,17 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     public void incrementImageTotal() {
         pictureTotalShower.setText(ListOfImages.listOfPostImages.size()+"");
     }
+    /*@Override
+    public void setActionBar(String heading) {
+        // TODO Auto-generated method stub
+
+        com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.title_bar_gray)));
+        actionBar.setTitle(heading);
+        actionBar.show();
+
+    }*/
 }

@@ -10,7 +10,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="108dp"
-        android:src="@mipmap/ic_launcher_round" />
+        android:src="@mipmap/ic_launcher_round"
+        />
 
     <TextView
         android:layout_width="match_parent"

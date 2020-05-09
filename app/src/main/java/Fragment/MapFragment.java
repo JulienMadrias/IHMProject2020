@@ -1,7 +1,12 @@
 package Fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
@@ -31,12 +37,16 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-public class MapFragment extends Fragment implements View.OnClickListener {
+import java.util.Objects;
+
+public class MapFragment extends Fragment implements View.OnClickListener, LocationListener {
 
 
 
@@ -52,6 +62,9 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
     private String JSONFILE = "" ;
 
+    private MapView map;
+    private IMapController mapController;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -62,7 +75,6 @@ public class MapFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        IMapController mapController;
         ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
         eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
         incidentButton = (FloatingActionButton) view.findViewById(R.id.incidentButton);
@@ -86,7 +98,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
 
         assert container != null;
-        MapView map = view.findViewById(R.id.map);
+        map = view.findViewById(R.id.map);
         if(map != null){
             map.setTileSource(TileSourceFactory.MAPNIK);
             map.setBuiltInZoomControls(true);
@@ -124,29 +136,40 @@ public class MapFragment extends Fragment implements View.OnClickListener {
 
             mOverlay.setFocusItemsOnTap(true);
             map.getOverlays().add(mOverlay);
+            // askGpsPermission();
         }
 
         return view;
     }
-
+    public void closeEventAdder(){
+        if(isAddEventsOpen){
+            eventAdder.setAnimation(floatButtonClose);
+            incidentButtonText.setVisibility(View.INVISIBLE);
+            accidentButtonText.setVisibility(View.INVISIBLE);
+            incidentButton.setAnimation(fabCloseAnim);
+            accidentButton.setAnimation(fabCloseAnim);
+            isAddEventsOpen = false;
+        }
+    }
+    public void openEventAdder(){
+        if(!isAddEventsOpen){
+            eventAdder.setAnimation(floatButtonOpen);
+            incidentButtonText.setVisibility(View.VISIBLE);
+            accidentButtonText.setVisibility(View.VISIBLE);
+            incidentButton.setAnimation(fabOpenAnim);
+            accidentButton.setAnimation(fabOpenAnim);
+            isAddEventsOpen = true;
+        }
+    }
     @Override
     public void onClick(View v) {
+        closeEventAdder();
         switch (v.getId()){
             case R.id.addAnEvent:
                 if(isAddEventsOpen){
-                    eventAdder.setAnimation(floatButtonClose);
-                    incidentButtonText.setVisibility(View.INVISIBLE);
-                    accidentButtonText.setVisibility(View.INVISIBLE);
-                    incidentButton.setAnimation(fabCloseAnim);
-                    accidentButton.setAnimation(fabCloseAnim);
-                    isAddEventsOpen = false;
+                    closeEventAdder();
                 }else {
-                    eventAdder.setAnimation(floatButtonOpen);
-                    incidentButtonText.setVisibility(View.VISIBLE);
-                    accidentButtonText.setVisibility(View.VISIBLE);
-                    incidentButton.setAnimation(fabOpenAnim);
-                    accidentButton.setAnimation(fabOpenAnim);
-                    isAddEventsOpen = true;
+                    openEventAdder();
                 }
                 break;
                 case R.id.incidentButton:
@@ -175,7 +198,7 @@ public class MapFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-    public void sendNotificationOnChannel(String title,String message,String channelId, int priority){
+    private void sendNotificationOnChannel(String title, String message, String channelId, int priority){
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getActivity().getApplicationContext(),channelId)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentTitle(title)
@@ -184,28 +207,70 @@ public class MapFragment extends Fragment implements View.OnClickListener {
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
 
-    public String loadJSONFromAsset() {
+    private String loadJSONFromAsset() {
         String json = null;
         try {
 
-            InputStream is = getContext().getAssets().open("alerts.json");
+            InputStream is = requireContext().getAssets().open("alerts.json");
 
             int size = is.available();
 
             byte[] buffer = new byte[size];
 
-            is.read(buffer);
+            // is.read(buffer);
 
             is.close();
 
-            json = new String(buffer, "UTF-8");
+            json = new String(buffer, StandardCharsets.UTF_8);
 
-
+            return json;
         } catch (IOException ex) {
             ex.printStackTrace();
             return null;
         }
-        return json;
+
+    }
+    private void askGpsPermission(){
+        LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    }
+    @Override
+    public void onLocationChanged(Location location) {
+            GeoPoint center = new GeoPoint(location.getLatitude(), location.getLongitude());
+            mapController.animateTo(center);
+            addMaker(center);
+    }
+    private void addMaker(GeoPoint startPoint) {
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(startPoint);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        startMarker.setIcon(getResources().getDrawable(R.drawable.ic_location_on_black_10dp));
+        startMarker.setTitle("Position Actuelle");
+        map.getOverlays().add(startMarker);
+        map.invalidate();
+    }
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 }

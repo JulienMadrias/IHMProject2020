@@ -3,6 +3,7 @@ package com.example.ihmproject;
 import android.content.Intent;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowInsets;
@@ -33,9 +34,11 @@ import PostImage.PostImage;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
     private Intent intent;
     private DrawerLayout drawerLayout;
+    private MapFragment mapFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Configuration.getInstance().load(   getApplicationContext(),
                 PreferenceManager.getDefaultSharedPreferences(getApplicationContext()) );
 
@@ -60,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if(savedInstanceState == null) startMapFragment();
+        Log.d("jiv", "Je m'apprete à fermer!");
     }
 
     @Override
@@ -95,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
     private void startMapFragment(){
+        if(mapFragment==null)mapFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new MapFragment()).commit();
+                mapFragment).commit();
     }
     private void initiateLanguageSpinner(){
         Spinner languageSpinner = (Spinner) findViewById(R.id.languageSpinner);
