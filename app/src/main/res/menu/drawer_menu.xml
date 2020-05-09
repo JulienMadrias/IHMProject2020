@@ -24,14 +24,9 @@
 
             </item>
             <item
+                app:actionLayout="@layout/switch_item"
                 android:id="@+id/SwitchGPS"
-                android:title="Activer GPS"
-                >
-            </item>
-
-
-
-
+                android:title="Activer GPS"/>
 
         </menu>
     </item>
