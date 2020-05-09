@@ -104,7 +104,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         twitterButton.setOnClickListener(this);
         centerMapButton.setOnClickListener(this);
 
-        pref = getActivity().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        pref =getContext().getSharedPreferences("MyPref",0);
         editor = pref.edit();
 
         isAddEventsOpen = false;
@@ -164,10 +164,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             Gson gson = new Gson();
             Map<String, ?> allEntries = pref.getAll();
             for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+
                 String json = pref.getString(entry.getKey(), "");
-                Incident incident = gson.fromJson(json, Incident.class);
-                OverlayItem alert = new OverlayItem(incident.getTitle(),incident.getDescription(), new GeoPoint(incident.getLongitude(),incident.getLatitude()));
-                items.add(alert);
+                if(json.contains("{")){
+                    Incident incident = gson.fromJson(json, Incident.class);
+                    OverlayItem alert = new OverlayItem(incident.getTitle(),incident.getDescription(), new GeoPoint(incident.getLongitude(),incident.getLatitude()));
+                    items.add(alert);
+                }
+
 
             }
 
@@ -261,29 +265,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
 
-    private String loadJSONFromAsset() {
-        String json = null;
-        try {
-
-            InputStream is = requireContext().getAssets().open("alerts.json");
-
-            int size = is.available();
-
-            byte[] buffer = new byte[size];
-
-            // is.read(buffer);
-
-            is.close();
-
-            json = new String(buffer, StandardCharsets.UTF_8);
-
-            return json;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-
-    }
     private void askGpsPermission(){
         LocationManager locationManager = (LocationManager) requireActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

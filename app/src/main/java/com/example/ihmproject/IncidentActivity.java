@@ -9,12 +9,17 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,19 +27,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
+import com.example.ihmproject.alertfactory.Incident;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
+
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
 import Fragment.AddPhotoDialogFragment;
+import Fragment.MapFragment;
 import Fragment.PictureFragment;
 import Fragment.PostImageListFragment;
 import Fragment.StorageFragment;
@@ -44,6 +55,12 @@ import Interface.IPictureActivity;
 import Interface.IPostImageClickListener;
 import Interface.IStorageActivity;
 import PostImage.ListOfImages;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
+
 
 public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity, IPostImageClickListener {
     Intent intent;
@@ -55,6 +72,18 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     private StorageFragment storageFragment;
     private AddPhotoDialogFragment addPhotoDialogFragment;
     private TextView pictureTotalShower;
+    private EditText description;
+    private SharedPreferences pref=null;
+    private SharedPreferences prefBouton=null;
+    private SharedPreferences.Editor editor=null;
+    private SharedPreferences.Editor editorBouton=null;
+    private double latitude = 43.615102;
+    private double longitude= 7.080124;
+
+
+    private Button auto,motard,cycliste,camion,pieton,bus;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,13 +92,73 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         //createPictureFragment();
         createPostImageListFragment();
         // createStorageFragment();
-        //Objects.requireNonNull(getActionBar()).setTitle("Incident");
-        //Objects.requireNonNull(getSupportActionBar()).setTitle("Incident");
         pictureTotalShower = (TextView) findViewById(R.id.picturesCountShower);
+
         ((Button)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
         ((Button)findViewById(R.id.publishIncidentButton)).setOnClickListener(this);
-        getSupportActionBar().setTitle("Incident");
-        //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        description= (EditText)findViewById(R.id.editText);
+        pref = getApplication().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        prefBouton = getApplication().getApplicationContext().getSharedPreferences("MyPrefBouton", 0); // 0 - for private mode
+        editor = pref.edit();
+
+        editorBouton = prefBouton.edit();
+
+        auto = ((Button) findViewById(R.id.voitureButton));
+        auto.setOnClickListener(this);
+
+        motard = ((Button) findViewById(R.id.motoButton));
+        motard.setOnClickListener(this);
+
+        cycliste = ((Button) findViewById(R.id.veloButton));
+        cycliste.setOnClickListener(this);
+
+        camion = ((Button) findViewById(R.id.camionButton));
+        camion.setOnClickListener(this);
+
+        pieton = ((Button) findViewById(R.id.pietonButton));
+        pieton.setOnClickListener(this);
+
+        bus = ((Button) findViewById(R.id.busButton));
+        bus.setOnClickListener(this);
+
+        if(prefBouton.getString("valeurBoutonVehicule","automobile")=="automobile")
+            editor.putString("valeurBoutonVehicule", "automobile");
+        editorBouton.commit();
+        initialiseMode();
+
+        longitude= getIntent().getDoubleExtra("longitude",0);
+        latitude= getIntent().getDoubleExtra("latitude",0);
+
+
+
+    }
+    private void initialiseMode(){
+        auto.setBackgroundColor(Color.WHITE);
+        motard.setBackgroundColor(Color.WHITE);
+        cycliste.setBackgroundColor(Color.WHITE);
+        camion.setBackgroundColor(Color.WHITE);
+        pieton.setBackgroundColor(Color.WHITE);
+        bus.setBackgroundColor(Color.WHITE);
+        switch (prefBouton.getString("valeurBoutonVehicule","automobile")){
+            case "automobile":
+                auto.setBackgroundColor(Color.GREEN);
+                break;
+            case "motard":
+                motard.setBackgroundColor(Color.GREEN);
+                break;
+            case "cycliste":
+                cycliste.setBackgroundColor(Color.GREEN);
+                break;
+            case "camion":
+                camion.setBackgroundColor(Color.GREEN);
+                break;
+            case "pieton":
+                pieton.setBackgroundColor(Color.GREEN);
+                break;
+            case "bus":
+                bus.setBackgroundColor(Color.GREEN);
+                break;
+        }
     }
     private void createPostImageListFragment(){
         postImageListFragment = (PostImageListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_image_list);
@@ -105,15 +194,70 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+
             case R.id.add_incident_photo:
                 Snackbar.make(v, "Boutton d'incident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 photoImportChoiceDialog();
                 break;
             case R.id.publishIncidentButton:
-                Toast.makeText(this,"l'incident sera très bientôt publié.",Toast.LENGTH_SHORT).show();
+
+                String description= this.description.getText().toString();
+                String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
+                //double longitude=43.622448;
+
+
+                Incident incident = new Incident(longitude,latitude,title,description);
+
+//set variables of 'myObject', etc.
+
+
+                Gson gson = new Gson();
+                String json = gson.toJson(incident);
+                editor.putString(title+longitude, json);
+                editor.commit();
+                /*json = pref.getString(title+longitude, "");
+                Incident obj = gson.fromJson(json, Incident.class);
+                System.out.println(obj.getDescription());*/
                 finish();
+                editorBouton.clear();
+                editorBouton.commit();
+                break;
+            case R.id.voitureButton:
+                editorBouton.putString("valeurBoutonVehicule", "automobile");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+            case R.id.busButton:
+                editorBouton.putString("valeurBoutonVehicule", "bus");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+            case R.id.pietonButton:
+                editorBouton.putString("valeurBoutonVehicule", "pieton");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+            case R.id.motoButton:
+                editorBouton.putString("valeurBoutonVehicule", "motard");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+            case R.id.camionButton:
+                editorBouton.putString("valeurBoutonVehicule", "camion");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+            case R.id.veloButton:
+                editorBouton.putString("valeurBoutonVehicule", "cycliste");
+                editorBouton.commit();
+                initialiseMode();
+                break;
+
         }
+    }
+    public void updateMap() {
+
     }
     private void photoImportChoiceDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -211,20 +355,20 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         switch (requestCode){
             case REQUEST_CAMERA:
                 if(resultCode == RESULT_OK){
-                picture = (Bitmap) data.getExtras().get("data");
-                //setImage(picture);
-                alertDialog.dismiss();
-                postImageListFragment.addNewPostImage(picture);
-                //pictureFragment.setImage(picture);
-            } else if (resultCode == RESULT_CANCELED){
-                Toast.makeText(this,"Prise de photo annulée!",Toast.LENGTH_SHORT).show();
-                takePicture();
-            }else{
-                Toast.makeText(this,"Echec de la prise de photo!",Toast.LENGTH_SHORT).show();
-                takePicture();
-            }
+                    picture = (Bitmap) data.getExtras().get("data");
+                    //setImage(picture);
+                    alertDialog.dismiss();
+                    postImageListFragment.addNewPostImage(picture);
+                    //pictureFragment.setImage(picture);
+                } else if (resultCode == RESULT_CANCELED){
+                    Toast.makeText(this,"Prise de photo annulée!",Toast.LENGTH_SHORT).show();
+                    takePicture();
+                }else{
+                    Toast.makeText(this,"Echec de la prise de photo!",Toast.LENGTH_SHORT).show();
+                    takePicture();
+                }
                 break;
-                //pictureFragment.setImage(picture);break;
+            //pictureFragment.setImage(picture);break;
             case REQUEST_IMPORT:
                 if(resultCode == RESULT_OK){
                     try {
@@ -264,17 +408,4 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     public void incrementImageTotal() {
         pictureTotalShower.setText(ListOfImages.listOfPostImages.size()+"");
     }
-    /*@Override
-    public void setActionBar(String heading) {
-        // TODO Auto-generated method stub
-
-        com.actionbarsherlock.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.title_bar_gray)));
-        actionBar.setTitle(heading);
-        actionBar.show();
-
-    }*/
 }

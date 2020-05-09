@@ -2,6 +2,7 @@ package com.example.ihmproject;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private MapFragment mapFragment;
     private boolean permissionGranted;
     private Location currentLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +145,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void mapIntentButtonClicked(View v) {
         switch(v.getId()){
-            case R.id.incidentButton : intent = new Intent(this, IncidentActivity.class); break;
-            case R.id.accidentButton: intent = new Intent(this, AccidentActivity.class); break;
+            case R.id.incidentButton :
+                intent = new Intent(this, IncidentActivity.class);
+                /*Lorsque la location sera implémentée et fonctionnelle les pointeurs marcheront*/
+                //intent.putExtra("longitude",currentLocation.getLongitude());
+                //intent.putExtra("latitude",currentLocation.getLatitude());
+                break;
+            case R.id.accidentButton:
+                intent = new Intent(this, AccidentActivity.class);
+
+                break;
         }
         if(intent != null)
         startActivity(intent);
