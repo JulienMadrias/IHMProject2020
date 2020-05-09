@@ -9,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,13 +45,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import static android.content.Context.LOCATION_SERVICE;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 import java.util.Objects;
 
 public class MapFragment extends Fragment implements View.OnClickListener, LocationListener {
 
 
 
-    private FloatingActionButton eventAdder,incidentButton,twitterButton,accidentButton;
+
+    private FloatingActionButton eventAdder,incidentButton,twitterButton,accidentButton,centerMapButton;
     private TextView incidentButtonText, accidentButtonText;
 
     private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose;
@@ -59,8 +63,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private int notificationId = 0;
 
     private IButtonMapListener mCallBack;
-
-    private String JSONFILE = "" ;
+    private Location currentLocation;
 
     private MapView map;
     private IMapController mapController;
@@ -69,17 +72,20 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mCallBack = (IButtonMapListener)getActivity();
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
         eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
         incidentButton = (FloatingActionButton) view.findViewById(R.id.incidentButton);
         accidentButton = (FloatingActionButton) view.findViewById(R.id.accidentButton);
         twitterButton = (FloatingActionButton) view.findViewById(R.id.twitterButton);
+        centerMapButton = (FloatingActionButton) view.findViewById(R.id.centerPosition);
 
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
         accidentButtonText = (TextView) view.findViewById(R.id.accidentTextView);
@@ -88,6 +94,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         incidentButton.setOnClickListener(this);
         accidentButton.setOnClickListener(this);
         twitterButton.setOnClickListener(this);
+        centerMapButton.setOnClickListener(this);
 
         isAddEventsOpen = false;
 
@@ -96,6 +103,37 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         fabCloseAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_close);
         floatButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_open);
         floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
+
+        boolean permissionGranted = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (permissionGranted) {
+            LocationListener listener = new LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    currentLocation = location;
+                    //moveCamera();
+                }
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+
+
+            };
+            LocationManager locationManager = (LocationManager) (getActivity().getSystemService(LOCATION_SERVICE));
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1, listener);
+
+        }
 
         assert container != null;
         map = view.findViewById(R.id.map);
@@ -106,7 +144,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
             mapController = map.getController();
             mapController.setZoom(18.0);
-            GeoPoint startPoint = new GeoPoint(43.615102, 7.080124);
+            GeoPoint startPoint;
+            if(permissionGranted && currentLocation!= null){startPoint = new GeoPoint(getLatitude(),getLongitude());}
+            else{startPoint = new GeoPoint(43.615102, 7.080124);}
             mapController.setCenter(startPoint);
 
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
@@ -196,6 +236,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     }
                     getActivity().startActivity(intent);
                 break;
+            case R.id.centerPosition:
+                if(currentLocation!= null){
+                map.setExpectedCenter(new GeoPoint(getLatitude(),getLongitude()));}
+                break;
         }
     }
     private void sendNotificationOnChannel(String title, String message, String channelId, int priority){
@@ -272,5 +316,13 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    double getLatitude() {
+        return currentLocation.getLatitude();
+    }
+
+    double getLongitude(){
+        return currentLocation.getLongitude();
     }
 }
