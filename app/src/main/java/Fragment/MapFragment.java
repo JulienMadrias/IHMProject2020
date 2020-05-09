@@ -3,6 +3,7 @@ package Fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -26,8 +27,10 @@ import androidx.fragment.app.Fragment;
 import com.example.ihmproject.ChannelNotification;
 import Interface.IButtonMapListener;
 import com.example.ihmproject.R;
+import com.example.ihmproject.alertfactory.Incident;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Map;
+
 import static android.content.Context.LOCATION_SERVICE;
 import static androidx.constraintlayout.widget.Constraints.TAG;
 import java.util.Objects;
@@ -64,6 +69,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     private IButtonMapListener mCallBack;
     private Location currentLocation;
+
+    private SharedPreferences pref=null;
+    private SharedPreferences.Editor editor=null;
 
     private MapView map;
     private IMapController mapController;
@@ -95,6 +103,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         accidentButton.setOnClickListener(this);
         twitterButton.setOnClickListener(this);
         centerMapButton.setOnClickListener(this);
+
+        pref = getActivity().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        editor = pref.edit();
 
         isAddEventsOpen = false;
 
@@ -152,15 +163,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             mapController.setCenter(startPoint);
 
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-            try {
-                JSONArray jsonArray = new JSONArray(loadJSONFromAsset());
-                for(int i=0;i<jsonArray.length();i++){
-                    JSONObject alerts = jsonArray.getJSONObject(i);
-                    OverlayItem alert = new OverlayItem(alerts.getString("title"),alerts.getString("description"), new GeoPoint(alerts.getDouble("latitude"),alerts.getDouble("longitude")));
-                    items.add(alert);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            Gson gson = new Gson();
+            Map<String, ?> allEntries = pref.getAll();
+            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                String json = pref.getString(entry.getKey(), "");
+                Incident incident = gson.fromJson(json, Incident.class);
+                OverlayItem alert = new OverlayItem(incident.getTitle(),incident.getDescription(), new GeoPoint(incident.getLongitude(),incident.getLatitude()));
+                items.add(alert);
+
             }
 
             ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
