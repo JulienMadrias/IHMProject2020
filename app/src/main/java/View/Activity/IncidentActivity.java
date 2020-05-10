@@ -47,6 +47,10 @@ import Interface.IPostImageClickListener;
 import Interface.IStorageActivity;
 import Model.ListOfImages;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
 
 public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity, IPostImageClickListener, IDescriptionListener, IGPSActivity {
     Intent intent;
@@ -185,6 +189,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 finish();
                 editorBouton.clear();
                 editorBouton.commit();
+                ChannelNotification notification = new ChannelNotification();
+                notification.createNotification();
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");
@@ -220,8 +226,13 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 startActivityForResult(new Intent(this, DescriptionActivity.class),COMMENT_RESULT_CODE);
                 break;
 
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
+
+
+
     public void updateMap() {
 
     }
