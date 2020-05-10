@@ -3,7 +3,6 @@ package View.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -147,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
         if(intent != null){
-            intent.putExtra("longitude",mapFragment.getLongitude());
-            intent.putExtra("latitude",mapFragment.getLatitude());
-            intent.putExtra("name",mapFragment.getLocationName());
+            intent.putExtra("longitude",mapFragment.getUserCurrentLongitude());
+            intent.putExtra("latitude",mapFragment.getUserCurrentLatitude());
+            // intent.putExtra("name",mapFragment.getLocationName());
         startActivity(intent);}
     }
 }

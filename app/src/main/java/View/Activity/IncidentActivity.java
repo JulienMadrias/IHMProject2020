@@ -85,6 +85,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         ((Button)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
         ((Button)findViewById(R.id.publishIncidentButton)).setOnClickListener(this);
+
         description= (EditText)findViewById(R.id.editText);
         pref = getApplication().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
         prefBouton = getApplication().getApplicationContext().getSharedPreferences("MyPrefBouton", 0); // 0 - for private mode
@@ -117,6 +118,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         longitude= getIntent().getDoubleExtra("longitude",0);
         latitude= getIntent().getDoubleExtra("latitude",0);
+
 
     }
     private void initialiseMode(){
@@ -190,7 +192,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 editorBouton.clear();
                 editorBouton.commit();
                 ChannelNotification notification = new ChannelNotification();
-                notification.createNotification();
+                notification.createNotification(getBaseContext(),getClass());
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");

@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import Interface.IGPSActivity;
-import Interface.IStorageActivity;
 import View.Activity.ChannelNotification;
 import Interface.IButtonMapListener;
 
@@ -49,12 +47,10 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements View.OnClickListener, LocationListener {
-
 
     private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton;
     private TextView incidentButtonText, accidentButtonText;
@@ -117,7 +113,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         if (permissionDenied) {
             askGpsPermission();
         } else {
-            resetCurrentPostion();
+            currentPositionListener();
         }
 
         assert container != null;
@@ -184,7 +180,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         return view;
     }
 
-    private void resetCurrentPostion() {
+    private void currentPositionListener() {
         LocationListener listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -322,14 +318,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         Snackbar.make(getView(), "changement position 1", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
             GeoPoint center = new GeoPoint(location.getLatitude(), location.getLongitude());
-            mapController.animateTo(center);
-            addMaker(center);
+            //mapController.animateTo(center);
+            addMarkerToCurentPosition();
     }
-    private void addMaker(GeoPoint startPoint) {
+    private void addMarkerToCurentPosition(){
+        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()),getResources().getDrawable(R.drawable.ic_location_on_blue_24dp));
+    }
+    private void addMaker(GeoPoint startPoint, Drawable icon) {
         Marker startMarker = new Marker(map);
         startMarker.setPosition(startPoint);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        startMarker.setIcon(getResources().getDrawable(R.drawable.ic_location_on_blue_24dp));
+        startMarker.setIcon(icon);
         startMarker.setTitle("Position Actuelle");
         map.getOverlays().remove(0);
         map.getOverlays().add(0,startMarker);
@@ -350,7 +349,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     }
 
-    public double getLatitude() {
+    public double getUserCurrentLatitude() {
         return currentLocation.getLatitude();
     }
 
@@ -358,15 +357,15 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         return currentLocation.toString();
     }
 
-    public double getLongitude(){
+    public double getUserCurrentLongitude(){
         return currentLocation.getLongitude();
     }
     public void centerMapToCurrentPosition(){
         if(currentLocation==null)
             currentLocation = new Location(LocationManager.GPS_PROVIDER);
             mapController.setZoom(20.0);
-            addMaker(new GeoPoint(getLatitude(),getLongitude()));
-        map.setExpectedCenter(new GeoPoint(getLatitude(),getLongitude()));
+            addMarkerToCurentPosition();
+            map.setExpectedCenter(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()));
             // mapController.animateTo(new GeoPoint(getLatitude(),getLongitude()));
        /* }
         else {
