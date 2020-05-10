@@ -6,22 +6,22 @@
     android:orientation="horizontal"
     android:weightSum="100"
     android:id="@+id/add_photo_view"
-    tools:context="Fragment.AddPhotoDialogFragment">
+    tools:context="View.Fragment.AddPhotoDialogFragment">
 
     <ImageButton
         android:id="@+id/picture_from_camera"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_weight="50"
         android:background="@drawable/fab_add_photo_background"
-        android:src="@drawable/picture_from_camera" />
+        android:src="@drawable/ic_camera_circle_foreground" />
 
     <ImageButton
         android:id="@+id/import_pictures"
         android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_weight="50"
         android:background="@drawable/fab_add_photo_background"
-        android:src="@drawable/import_pictures" />
+        android:src="@drawable/ic_download_circle_foreground" />
 
 </LinearLayout>
