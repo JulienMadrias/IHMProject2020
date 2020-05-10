@@ -27,14 +27,17 @@ import android.widget.Toast;
 
 import com.example.ihmproject.R;
 
+import Controller.IncidentController;
 import Interface.IGPSActivity;
-import Model.Incident;
+import Interface.IIncidentModelView;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import Model.Incident;
 import View.Fragment.AddPhotoDialogFragment;
 import View.Fragment.PictureFragment;
 import View.Fragment.PostImageListFragment;
@@ -47,12 +50,7 @@ import Interface.IPostImageClickListener;
 import Interface.IStorageActivity;
 import Model.ListOfImages;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Map;
-
-public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity, IPostImageClickListener, IDescriptionListener, IGPSActivity {
+public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity, IPostImageClickListener, IDescriptionListener, IGPSActivity, IIncidentModelView {
     Intent intent;
     AlertDialog alertDialog;
     private Bitmap picture;
@@ -68,7 +66,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     private SharedPreferences.Editor editorBouton=null;
     private double latitude = 43.615102;
     private double longitude= 7.080124;
-
+    private IncidentController incidentController=new IncidentController(this);
 
     private Button auto,motard,cycliste,camion,pieton,bus;
 
@@ -170,29 +168,10 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 photoImportChoiceDialog();
                 break;
             case R.id.publishIncidentButton:
-
-                String description= this.description.getText().toString();
-                String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
-                //double longitude=43.622448;
-
-
-                Incident incident = new Incident(longitude,latitude,title,description);
-
-                //set variables of 'myObject', etc.
-
-
-                Gson gson = new Gson();
-                String json = gson.toJson(incident);
-                editor.putString(title+longitude, json);
-                editor.commit();
-                /*json = pref.getString(title+longitude, "");
-                Incident obj = gson.fromJson(json, Incident.class);
-                System.out.println(obj.getDescription());*/
+                incidentController.publishIncident();
                 finish();
                 editorBouton.clear();
                 editorBouton.commit();
-                ChannelNotification notification = new ChannelNotification();
-                notification.createNotification(getBaseContext(),getClass());
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");
@@ -404,6 +383,16 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
     @Override
     public void moveCamera() {
+
+    }
+
+    @Override
+    public Incident getIncidentToPublish() {
+
+        String description= this.description.getText().toString();
+        String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
+        //double longitude=43.622448;
+        return new Incident(longitude,latitude,title,description);
 
     }
 }
