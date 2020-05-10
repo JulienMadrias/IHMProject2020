@@ -13,6 +13,8 @@ import android.widget.Button;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.ihmproject.R;
+
 import java.util.Objects;
 
 public class ChannelNotification extends Application {

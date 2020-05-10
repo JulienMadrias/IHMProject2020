@@ -189,6 +189,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             @Override
             public void onLocationChanged(Location location) {
                 currentLocation = location;
+                centerMapToCurrentPosition();
                 //moveCamera();
             }
 
@@ -281,7 +282,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     getActivity().startActivity(intent);
                 break;
             case R.id.centerPosition:
-                closeEventAdder();
+                if(getView()!=null)
+                    Snackbar.make(getView(), "Position courante ... ", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 centerMapToCurrentPosition();
                 break;
         }
@@ -315,6 +318,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
     @Override
     public void onLocationChanged(Location location) {
+
+        Snackbar.make(getView(), "changement position 1", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
             GeoPoint center = new GeoPoint(location.getLatitude(), location.getLongitude());
             mapController.animateTo(center);
             addMaker(center);
@@ -358,10 +364,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void centerMapToCurrentPosition(){
         if(currentLocation==null)
             currentLocation = new Location(LocationManager.GPS_PROVIDER);
-
-            if(getView()!=null)
-            Snackbar.make(getView(), "Position courante ... ", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
             mapController.setZoom(20.0);
             addMaker(new GeoPoint(getLatitude(),getLongitude()));
         map.setExpectedCenter(new GeoPoint(getLatitude(),getLongitude()));
