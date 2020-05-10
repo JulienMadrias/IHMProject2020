@@ -26,6 +26,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.ihmproject.R;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Objects;
+
 import View.Fragment.MapFragment;
 import View.Fragment.ModeDeDeplacementFragment;
 import Interface.IButtonDrawerClickListener;
@@ -68,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         if(savedInstanceState == null) startMapFragment();
-        Log.d("jiv", "Je m'apprete à fermer!");
     }
 
     @Override
@@ -89,7 +90,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawer(GravityCompat.START);
         }/*else if(Objects.requireNonNull(getSupportFragmentManager().findFragmentById(R.id.fragment_container)).getTargetFragment() instanceof ModeDeDeplacementFragment){
             startMapFragment();
-        }*/else{
+        }*/
+        else if(Objects.equals(Objects.requireNonNull(getSupportActionBar()).getTitle(), "Mode de déplacement")){
+            startMapFragment();
+        }
+        else{
             super.onBackPressed();
         }
     }
@@ -97,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.nav_transport_mode) {
+            getSupportActionBar().setTitle("Mode de déplacement");
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new ModeDeDeplacementFragment()).commit();
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -112,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
     private void startMapFragment(){
+        getSupportActionBar().setTitle(R.string.app_name);
         if(mapFragment==null)mapFragment = new MapFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 mapFragment).commit();

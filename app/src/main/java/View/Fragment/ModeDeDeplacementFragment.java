@@ -37,6 +37,7 @@ public class ModeDeDeplacementFragment extends Fragment implements View.OnClickL
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mode_transport, container, false);
+
         ((Button) view.findViewById(R.id.close_mode_transport)).setOnClickListener(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = preferences.edit();

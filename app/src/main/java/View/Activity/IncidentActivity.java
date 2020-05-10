@@ -66,7 +66,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     private SharedPreferences.Editor editorBouton=null;
     private double latitude = 43.615102;
     private double longitude= 7.080124;
-    private IncidentController incidentController=new IncidentController(this);
+    private IncidentController incidentController;
 
     private Button auto,motard,cycliste,camion,pieton,bus;
 
@@ -86,6 +86,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         description= (EditText)findViewById(R.id.editText);
         pref = getApplication().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        incidentController = new IncidentController(this, pref);
         prefBouton = getApplication().getApplicationContext().getSharedPreferences("MyPrefBouton", 0); // 0 - for private mode
         editor = pref.edit();
 
@@ -117,6 +118,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         /*longitude= getIntent().getDoubleExtra("longitude",0);
         latitude= getIntent().getDoubleExtra("latitude",0);*/
 
+        getSupportActionBar().setTitle("Déclaration d'incident");
+        //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
     }
     private void initialiseMode(){
@@ -169,9 +172,9 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 break;
             case R.id.publishIncidentButton:
                 incidentController.publishIncident();
-                finish();
                 editorBouton.clear();
                 editorBouton.commit();
+                finish();
                 //ChannelNotification notification = new ChannelNotification();
                 //notification.createNotification(getApplicationContext(),getClass());
                 break;
