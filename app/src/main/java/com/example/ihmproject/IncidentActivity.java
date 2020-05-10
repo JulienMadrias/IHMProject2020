@@ -56,6 +56,7 @@ import Interface.IPostImageClickListener;
 import Interface.IStorageActivity;
 import PostImage.ListOfImages;
 
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -222,6 +223,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 finish();
                 editorBouton.clear();
                 editorBouton.commit();
+                ChannelNotification notification = new ChannelNotification();
+                notification.createNotification();
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");
@@ -254,8 +257,13 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 initialiseMode();
                 break;
 
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
         }
     }
+
+
+
     public void updateMap() {
 
     }
