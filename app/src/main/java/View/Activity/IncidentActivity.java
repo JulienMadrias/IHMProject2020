@@ -112,12 +112,12 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         bus.setOnClickListener(this);
 
         if(prefBouton.getString("valeurBoutonVehicule","automobile")=="automobile")
-            editor.putString("valeurBoutonVehicule", "automobile");
+            editorBouton.putString("valeurBoutonVehicule", "automobile");
         editorBouton.commit();
         initialiseMode();
 
-        longitude= getIntent().getDoubleExtra("longitude",0);
-        latitude= getIntent().getDoubleExtra("latitude",0);
+        /*longitude= getIntent().getDoubleExtra("longitude",0);
+        latitude= getIntent().getDoubleExtra("latitude",0);*/
 
 
     }
@@ -191,8 +191,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 finish();
                 editorBouton.clear();
                 editorBouton.commit();
-                ChannelNotification notification = new ChannelNotification();
-                notification.createNotification(getBaseContext(),getClass());
+                //ChannelNotification notification = new ChannelNotification();
+                //notification.createNotification(getApplicationContext(),getClass());
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");

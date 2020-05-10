@@ -147,14 +147,16 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
             Gson gson = new Gson();
             Map<String, ?> allEntries = pref.getAll();
+            System.out.println("bite2");
             for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-
+                System.out.println(entry.getValue());
+                System.out.println("bite");
                 String json = pref.getString(entry.getKey(), "");
-                if (json.contains("{")) {
+
                     Incident incident = gson.fromJson(json, Incident.class);
                     OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
                     items.add(alert);
-                }
+
 
 
             }
