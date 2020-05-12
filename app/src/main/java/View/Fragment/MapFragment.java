@@ -59,7 +59,7 @@ import static android.content.Context.LOCATION_SERVICE;
 public class MapFragment extends Fragment implements View.OnClickListener, LocationListener, IIncidentModelView {
     private IncidentController incidentController;
 
-    private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton;
+    private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton, saveLocationButton;
     private TextView incidentButtonText, accidentButtonText;
     private Button reminder;
 
@@ -69,7 +69,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private int notificationId = 0;
 
     private IButtonMapListener mCallBack;
-    private Location currentLocation;
+    private Location currentLocation, savedLocation;
 
     private SharedPreferences pref = null;
     private SharedPreferences.Editor editor = null;
@@ -97,6 +97,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         accidentButton = (FloatingActionButton) view.findViewById(R.id.accidentButton);
         twitterButton = (FloatingActionButton) view.findViewById(R.id.twitterButton);
         centerMapButton = (FloatingActionButton) view.findViewById(R.id.centerPosition);
+        saveLocationButton = (FloatingActionButton) view.findViewById(R.id.saveLocation);
         reminder = view.findViewById(R.id.reminder);
 
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
@@ -107,6 +108,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         accidentButton.setOnClickListener(this);
         twitterButton.setOnClickListener(this);
         centerMapButton.setOnClickListener(this);
+        saveLocationButton.setOnClickListener(this);
 
         pref = getContext().getSharedPreferences("MyPref", 0);
         editor = pref.edit();
@@ -125,6 +127,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             askGpsPermission();
         } else {
             currentPositionListener();
+            savedLocation = currentLocation;
         }
 
         assert container != null;
@@ -291,6 +294,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             .setAction("Action", null).show();
                 centerMapToCurrentPosition();
                 break;
+            case R.id.saveLocation:
+                Snackbar.make(getView(), "Position courante enregistrée ", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                savedLocation = currentLocation;
         }
     }
     private void sendNotificationOnChannel(String title, String message, String channelId, int priority){
@@ -344,7 +351,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             resetCurrentPostionMarker();
     }
     private void resetCurrentPostionMarker(){
-        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", getResources().getDrawable(R.drawable.ic_location_on_blue_24dp),true);
+        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", getActivity().getResources().getDrawable(R.drawable.ic_location_on_blue_24dp),true);
     }
 
     @Override
@@ -421,4 +428,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         }*/
     }
 
+    public double getSavedLatitude(){
+        if (savedLocation != null){
+            return savedLocation.getLatitude();}
+        else{return 0;}
+    }
+    public double getSavedLongitude() {
+        if (savedLocation != null) {
+            return savedLocation.getLongitude();
+        }
+        else{return 0;}
+    }
+
+    public void resetSavedLocation(){savedLocation = null;}
 }

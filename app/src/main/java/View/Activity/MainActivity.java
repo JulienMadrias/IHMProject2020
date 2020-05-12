@@ -174,7 +174,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(intent != null){
             intent.putExtra("longitude",mapFragment.getUserCurrentLongitude());
             intent.putExtra("latitude",mapFragment.getUserCurrentLatitude());
+            intent.putExtra("saveLatitude", mapFragment.getSavedLatitude());
+            intent.putExtra("saveLongitude", mapFragment.getSavedLongitude());
             // intent.putExtra("name",mapFragment.getLocationName());
-        startActivityForResult(intent,resultCode);}
+        startActivityForResult(intent,resultCode);
+        mapFragment.resetSavedLocation();
+        }
     }
 }

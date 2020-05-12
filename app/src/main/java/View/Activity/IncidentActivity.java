@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -71,6 +72,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     private SharedPreferences.Editor editorBouton=null;
     private double latitude = 43.615102;
     private double longitude= 7.080124;
+    private double savedLongitude = 0;
+    private double savedLatitude = 0;
     private IncidentController incidentController;
 
     private Button auto,motard,cycliste,camion,pieton,bus;
@@ -122,6 +125,9 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         longitude= getIntent().getDoubleExtra("longitude",0);
         latitude= getIntent().getDoubleExtra("latitude",0);
+        savedLatitude=getIntent().getDoubleExtra("saveLatitude", 0);
+        savedLongitude=getIntent().getDoubleExtra("saveLongitude", 0);
+
 
         Objects.requireNonNull(getSupportActionBar()).setTitle("Déclaration d'incident");
         //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
@@ -416,7 +422,10 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         String description= this.description.getText().toString();
         String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
         //double longitude=43.622448;
-        return new Incident(longitude,latitude,title,description);
+        if(savedLongitude != 0 && savedLatitude !=0){
+            return new Incident(savedLongitude,savedLatitude,title,description);
+        }
+        else{return new Incident(longitude,latitude,title,description);}
 
     }
 
@@ -424,4 +433,5 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
     public void addMaker(GeoPoint startPoint, String title, Drawable icon, boolean userPosition) {
 
     }
+
 }

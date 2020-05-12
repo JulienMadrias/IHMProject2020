@@ -119,8 +119,21 @@
         android:clickable="true"
         android:visibility="visible"
         android:src="@drawable/ic_menu_mylocation"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/accidentButton" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/twitterButton" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/saveLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:contentDescription="center"
+        android:src="@drawable/ic_location_on_blue_24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/centerPosition"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 
