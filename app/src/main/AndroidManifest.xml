@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.ihmproject">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -23,12 +24,17 @@
         <activity android:name="View.Activity.DescriptionActivity"></activity>
         <activity
             android:name="View.Activity.AccidentActivity"
-            android:parentActivityName="View.Activity.MainActivity" />
+            android:screenOrientation="portrait"
+            android:parentActivityName="View.Activity.MainActivity"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name="View.Activity.IncidentActivity"
-            android:parentActivityName="View.Activity.MainActivity" />
+            android:screenOrientation="portrait"
+            android:parentActivityName="View.Activity.MainActivity"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name="View.Activity.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
