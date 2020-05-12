@@ -1,27 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:weightSum="100"
     android:id="@+id/add_photo_view"
     tools:context="View.Fragment.AddPhotoDialogFragment">
-
+    <TextView
+        android:layout_width="match_parent"
+        android:text="Import de Photos"
+        android:layout_height="0dp"
+        android:layout_weight="25"
+        android:fontFamily="@font/abril_fatface"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:textColor="@color/colorPrimaryDark"/>
+<LinearLayout
+    android:orientation="horizontal"
+    android:weightSum="100"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="75">
     <ImageButton
         android:id="@+id/picture_from_camera"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:layout_weight="50"
         android:background="@drawable/fab_add_photo_background"
-        android:src="@drawable/ic_camera_circle_foreground" />
+        android:src="@drawable/ic_camera_circle_white_foreground" />
 
     <ImageButton
         android:id="@+id/import_pictures"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:layout_weight="50"
         android:background="@drawable/fab_add_photo_background"
-        android:src="@drawable/ic_download_circle_foreground" />
+        android:src="@drawable/ic_download_circle_white_foreground" />
+</LinearLayout>
+
 
 </LinearLayout>

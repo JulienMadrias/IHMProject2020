@@ -22,6 +22,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +82,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         // createStorageFragment();
         pictureTotalShower = (TextView) findViewById(R.id.picturesCountShower);
 
-        ((Button)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
+        ((ImageButton)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
         ((Button)findViewById(R.id.publishIncidentButton)).setOnClickListener(this);
 
         description= (EditText)findViewById(R.id.editText);
@@ -129,23 +130,36 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         camion.setBackgroundColor(Color.WHITE);
         pieton.setBackgroundColor(Color.WHITE);
         bus.setBackgroundColor(Color.WHITE);
+
+        auto.setTextColor(Color.BLACK);
+        motard.setTextColor(Color.BLACK);
+        cycliste.setTextColor(Color.BLACK);
+        camion.setTextColor(Color.BLACK);
+        pieton.setTextColor(Color.BLACK);
+        bus.setTextColor(Color.BLACK);
         switch (Objects.requireNonNull(prefBouton.getString("valeurBoutonVehicule", "automobile"))){
             case "automobile":
+                auto.setTextColor(Color.WHITE);
                 auto.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "motard":
+                motard.setTextColor(Color.WHITE);
                 motard.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "cycliste":
+                cycliste.setTextColor(Color.WHITE);
                 cycliste.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "camion":
+                camion.setTextColor(Color.WHITE);
                 camion.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "pieton":
+                pieton.setTextColor(Color.WHITE);
                 pieton.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "bus":
+                bus.setTextColor(Color.WHITE);
                 bus.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
         }
@@ -174,6 +188,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 incidentController.postIncident();
                 editorBouton.clear();
                 editorBouton.commit();
+                Toast.makeText(this,"Publication de l'incident en cour...",Toast.LENGTH_SHORT).show();
                 finish();
                 //ChannelNotification notification = new ChannelNotification();
                 //notification.createNotification(getApplicationContext(),getClass());

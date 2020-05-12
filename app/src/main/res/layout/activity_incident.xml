@@ -126,13 +126,13 @@
                 android:textAlignment="center"
                 android:textSize="17sp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/add_incident_photo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="12"
                 android:background="@drawable/ic_add_white_24dp"
-                android:drawableStart="@drawable/ic_add_circle_black_24dp" />
+                android:src="@drawable/ic_add_circle_primary_24dp" />
 
             <TextView
                 android:layout_width="0dp"
@@ -173,9 +173,9 @@
             android:layout_height="0dp"
             android:layout_weight="9"
             android:fontFamily="@font/abril_fatface"
-            android:text="Informations Supplémentaires"
-            android:textAlignment="viewStart"
             android:textSize="24sp"
+            android:textAlignment="viewStart"
+            android:text="Informations Supplémentaires: "
             />
 
         <EditText
