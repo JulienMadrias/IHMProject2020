@@ -72,6 +72,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private MapView map;
     private IMapController mapController;
 
+    private int compteurIncidentProche=0;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -144,6 +146,31 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     new Runnable() {
                         public void run() {
                             centerMapToCurrentPosition();
+                            new android.os.Handler().postDelayed(
+                                    new Runnable() {
+                                        public void run() {
+
+                                            Gson gson = new Gson();
+                                            Map<String, ?> allEntries = pref.getAll();
+                                            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                                                System.out.println(entry.getValue());
+
+                                                String json = pref.getString(entry.getKey(), "");
+                                                if(json.contains("{")){
+                                                    Incident incident = gson.fromJson(json, Incident.class);
+                                                    if(calculateDistance(incident.getLatitude(),incident.getLongitude(),getUserCurrentLatitude(),getUserCurrentLongitude())<1)
+                                                        compteurIncidentProche+=1;
+
+
+                                                }
+
+                                            }
+                                            if(compteurIncidentProche!=0){
+                                                sendNotificationOnChannel("title","message","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                                            }
+                                        }
+                                    },
+                                    3000);
                         }
                     },
                     1000);
@@ -151,15 +178,22 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
             Gson gson = new Gson();
             Map<String, ?> allEntries = pref.getAll();
-            System.out.println("bite2");
-            /*for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+
+            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
                 System.out.println(entry.getValue());
-                System.out.println("bite");
-                String json = pref.getString(entry.getKey(), "");
-                Incident incident = gson.fromJson(json, Incident.class);
-                OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
-                items.add(alert);
-            }*/
+
+                    String json = pref.getString(entry.getKey(), "");
+                if(json.contains("{")){
+                    Incident incident = gson.fromJson(json, Incident.class);
+                    OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
+                    items.add(alert);
+
+
+
+
+                }
+
+            }
 
             ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
@@ -182,6 +216,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         return view;
     }
 
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2){
+
+        double pi = Math.PI/180;    // Math.PI / 180
+
+            double a = 0.5 - Math.cos((lat2 - lat1) * pi)/2 +
+                    Math.cos(lat1 * pi) * Math.cos(lat2 * pi) *
+                            (1 - Math.cos((lon2 - lon1) * pi))/2;
+
+            return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+
+    }
     private void currentPositionListener() {
         LocationListener listener = new LocationListener() {
             @Override
@@ -380,4 +425,5 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             askGpsPermission();
         }*/
     }
+    
 }
