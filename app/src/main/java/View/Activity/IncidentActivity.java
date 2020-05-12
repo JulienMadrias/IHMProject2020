@@ -120,8 +120,8 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         editorBouton.apply();
         initialiseMode();
 
-        /*longitude= getIntent().getDoubleExtra("longitude",0);
-        latitude= getIntent().getDoubleExtra("latitude",0);*/
+        longitude= getIntent().getDoubleExtra("longitude",0);
+        latitude= getIntent().getDoubleExtra("latitude",0);
 
         Objects.requireNonNull(getSupportActionBar()).setTitle("Déclaration d'incident");
         //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
@@ -416,7 +416,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         String description= this.description.getText().toString();
         String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
         //double longitude=43.622448;
-        return new Incident(longitude-3,latitude-2,title,description);
+        return new Incident(longitude,latitude,title,description);
 
     }
 

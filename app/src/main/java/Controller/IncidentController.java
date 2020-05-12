@@ -42,7 +42,7 @@ public class IncidentController{
             if(json.startsWith("{")){
                 Incident incident = gson.fromJson(json, Incident.class);
                 incidents.add(incident);
-                iIncidentModelView.addMaker(new GeoPoint( incident.getLatitude(),incident.getLongitude()), incident.getDescription(), context.getResources().getDrawable(R.drawable.ic_traffic_jam_svgrepo_com_marker),false);
+                iIncidentModelView.addMaker(new GeoPoint(incident.getLatitude(), incident.getLongitude()), incident.getDescription(), context.getResources().getDrawable(R.drawable.ic_traffic_jam_svgrepo_com_marker),false);
                 //OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
                 //items.add(alert);
             }
