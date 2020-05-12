@@ -1,7 +1,6 @@
 package View.Fragment;
 
 import android.Manifest;
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +26,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
+import Controller.IncidentController;
 import Interface.IGPSActivity;
+import Interface.IIncidentModelView;
 import View.Activity.ChannelNotification;
 import Interface.IButtonMapListener;
 
@@ -36,7 +38,6 @@ import Model.Incident;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -48,11 +49,11 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends Fragment implements View.OnClickListener, LocationListener {
+public class MapFragment extends Fragment implements View.OnClickListener, LocationListener, IIncidentModelView {
+    private IncidentController incidentController;
 
     private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton;
     private TextView incidentButtonText, accidentButtonText;
@@ -82,7 +83,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        // Log.d("jiv","passe encore par ici");
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ItemizedOverlayWithFocus<OverlayItem> mMyLocationOverlay;
         eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
@@ -126,20 +127,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             map.setTileSource(TileSourceFactory.MAPNIK);
             map.setBuiltInZoomControls(true);
             map.setMultiTouchControls(true);
-
             mapController = map.getController();
             mapController.setZoom(18.0);
-            GeoPoint startPoint;
-            /*if (!permissionDenied && currentLocation != null) {
-                startPoint = new GeoPoint(getLatitude(), getLongitude());
-            } else {
-                startPoint = new GeoPoint(43.615102, 7.080124);
-            }
-            mapController.setCenter(startPoint);*/
-            //currentLocation = new Location(LocationManager.GPS_PROVIDER);
-
             map.setExpectedCenter(new GeoPoint(43.615102, 7.080124));
-
             new android.os.Handler().postDelayed(
                     new Runnable() {
                         public void run() {
@@ -147,37 +137,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                         }
                     },
                     1000);
-            // centerMapToCurrentPosition();
-            ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-            Gson gson = new Gson();
-            Map<String, ?> allEntries = pref.getAll();
-            System.out.println("bite2");
-            /*for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-                System.out.println(entry.getValue());
-                System.out.println("bite");
-                String json = pref.getString(entry.getKey(), "");
-                Incident incident = gson.fromJson(json, Incident.class);
-                OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
-                items.add(alert);
-            }*/
+            incidentController = new IncidentController(this, getContext());
+            incidentController.get();
 
-            ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
-                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
-                        @Override
-                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onItemLongPress(final int index, final OverlayItem item) {
-                            return false;
-                        }
-                    });
-
-
-            mOverlay.setFocusItemsOnTap(true);
-            map.getOverlays().add(mOverlay);
-            // askGpsPermission();
         }
         return view;
     }
@@ -323,19 +285,40 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setAction("Action", null).show();
             GeoPoint center = new GeoPoint(location.getLatitude(), location.getLongitude());
             //mapController.animateTo(center);
-            addMarkerToCurentPosition();
+            resetCurrentPostionMarker();
     }
-    private void addMarkerToCurentPosition(){
-        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()),getResources().getDrawable(R.drawable.ic_location_on_blue_24dp));
+    private void resetCurrentPostionMarker(){
+        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", getResources().getDrawable(R.drawable.ic_location_on_blue_24dp),true);
     }
-    private void addMaker(GeoPoint startPoint, Drawable icon) {
+
+    @Override
+    public Incident getIncidentToPublish() {
+        return null;
+    }
+    private void cleanOtherMarkers(){
+        map.getOverlays().clear();
+        resetCurrentPostionMarker();
+    }
+    public void refreshMarkers(){
+        cleanOtherMarkers();
+        incidentController.get();
+        Log.d("jiv","current Long: "+getUserCurrentLongitude()+" Lat: "+getUserCurrentLatitude());
+    }
+    @Override
+    public void addMaker(GeoPoint startPoint, String title, Drawable icon, boolean userPosition){
         Marker startMarker = new Marker(map);
         startMarker.setPosition(startPoint);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         startMarker.setIcon(icon);
-        startMarker.setTitle("Position Actuelle");
-        map.getOverlays().remove(0);
+        startMarker.setTitle(title);
+        if(userPosition){
+            if(map.getOverlays().size()>0)
+            map.getOverlays().remove(0);
         map.getOverlays().add(0,startMarker);
+        }else
+            map.getOverlays().add(startMarker);
+        if(currentLocation!=null)
+        Log.d("jiv","current Long: "+getUserCurrentLongitude()+" Lat: "+getUserCurrentLatitude());
         map.invalidate();
     }
     @Override
@@ -367,8 +350,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void centerMapToCurrentPosition(){
         if(currentLocation==null)
             currentLocation = new Location(LocationManager.GPS_PROVIDER);
+
             mapController.setZoom(20.0);
-            addMarkerToCurentPosition();
+            resetCurrentPostionMarker();
             map.setExpectedCenter(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()));
             // mapController.animateTo(new GeoPoint(getLatitude(),getLongitude()));
        /* }
