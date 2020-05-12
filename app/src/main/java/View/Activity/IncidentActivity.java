@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,6 +34,8 @@ import Interface.IGPSActivity;
 import Interface.IIncidentModelView;
 
 import com.google.android.material.snackbar.Snackbar;
+
+import org.osmdroid.util.GeoPoint;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -53,6 +56,7 @@ import Model.ListOfImages;
 
 public class IncidentActivity extends AppCompatActivity implements IButtonIncidentListener, View.OnClickListener, IPhotoDialogListener, IPictureActivity, IStorageActivity, IPostImageClickListener, IDescriptionListener, IGPSActivity, IIncidentModelView {
     Intent intent;
+
     AlertDialog alertDialog;
     private Bitmap picture;
     private PostImageListFragment postImageListFragment;
@@ -87,7 +91,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         description= (EditText)findViewById(R.id.editText);
         pref = getApplication().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
-        incidentController = new IncidentController(this, pref);
+        incidentController = new IncidentController(this, this);
         prefBouton = getApplication().getApplicationContext().getSharedPreferences("MyPrefBouton", 0); // 0 - for private mode
         editor = pref.edit();
 
@@ -412,7 +416,12 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         String description= this.description.getText().toString();
         String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
         //double longitude=43.622448;
-        return new Incident(longitude,latitude,title,description);
+        return new Incident(longitude-3,latitude-2,title,description);
+
+    }
+
+    @Override
+    public void addMaker(GeoPoint startPoint, String title, Drawable icon, boolean userPosition) {
 
     }
 }

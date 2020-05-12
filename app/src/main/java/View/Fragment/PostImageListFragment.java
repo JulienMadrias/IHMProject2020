@@ -96,7 +96,6 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
         // Inflate the layout for this fragment
 
         rootView = inflater.inflate(R.layout.fragment_image_list, container, false);
-        Log.d("jiv", "onCreateView: picture"+picturesCountShower);
         resetPostImageList();
 /*
         mListView.setAdapter(adapter);

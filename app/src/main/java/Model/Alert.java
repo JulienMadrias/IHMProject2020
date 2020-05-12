@@ -24,4 +24,17 @@ public class Alert {
     public String getTitle(){return title;}
 
     public String getDescription(){return description;}
+
+
+    @Override
+    public String toString() {
+        return "Alert{" +
+                "longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", type=" + type +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
 }

@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 
@@ -28,13 +29,14 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.Objects;
 
+import Interface.IActivitiesCodeResult;
 import View.Fragment.MapFragment;
 import View.Fragment.ModeDeDeplacementFragment;
 import Interface.IButtonDrawerClickListener;
 import Interface.IButtonMapListener;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener, IActivitiesCodeResult {
     private Intent intent;
     private DrawerLayout drawerLayout;
 
@@ -69,7 +71,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        if(savedInstanceState == null) startMapFragment();
+        if(savedInstanceState == null)
+            startMapFragment();
+        //Log.d("jiv",savedInstanceState==null?"il est null":savedInstanceState.toString());
     }
 
     @Override
@@ -142,12 +146,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mapFragment.refreshMarkers();
+        switch (resultCode){
+            case INCIDENT_RESULT_CODE:
+                break;
+            case ACCIDENT_RESULT_CODE:
+                break;
+        }
+    }
+
+    @Override
     public void mapIntentButtonClicked(View v) {
+        int resultCode = 0;
         switch(v.getId()){
             case R.id.incidentButton :
+                resultCode = INCIDENT_RESULT_CODE;
                 intent = new Intent(this, IncidentActivity.class);
                 break;
             case R.id.accidentButton:
+                resultCode = ACCIDENT_RESULT_CODE;
                 intent = new Intent(this, AccidentActivity.class);
 
                 break;
@@ -156,6 +175,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("longitude",mapFragment.getUserCurrentLongitude());
             intent.putExtra("latitude",mapFragment.getUserCurrentLatitude());
             // intent.putExtra("name",mapFragment.getLocationName());
-        startActivity(intent);}
+        startActivityForResult(intent,resultCode);}
     }
 }
