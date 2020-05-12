@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.ihmproject.R;
 import com.google.gson.Gson;
 
 import org.osmdroid.util.GeoPoint;
@@ -16,12 +15,12 @@ import Interface.IIncidentModelView;
 import Model.Alert;
 import Model.Incident;
 
-public class IncidentController{
+public class AccidentController {
     private Context context;
     private SharedPreferences pref=null;
     private SharedPreferences.Editor editor=null;
     private IIncidentModelView iIncidentModelView;
-    public IncidentController(IIncidentModelView iIncidentModelView, Context context){
+    public AccidentController(IIncidentModelView iIncidentModelView, Context context){
         this.iIncidentModelView = iIncidentModelView;
         this.context = context;
         recupPref();

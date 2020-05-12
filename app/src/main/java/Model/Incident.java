@@ -1,14 +1,15 @@
 package Model;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 public class Incident extends Alert {
-    ArrayList<PostImage> listOfPostImages= new ArrayList<>();
+    private ArrayList<String> listOfPostImages = new ArrayList<>();
     public Incident(double longitude, double latitude, String title, String description){
-        super(longitude, latitude, title, description, 1);
+        this(longitude, latitude, title, description, new ArrayList<String>());
     }
-    public Incident(double longitude, double latitude, String title, String description, ArrayList<PostImage> listOfPostImages){
-        super(longitude, latitude, title, description, 1);
+    public Incident(double longitude, double latitude, String title, String description, ArrayList<String> listOfPostImages){
+        super(longitude, latitude, title, description, Alert.INCIDENT);
         this.listOfPostImages = new ArrayList<>(listOfPostImages);
     }
 }
