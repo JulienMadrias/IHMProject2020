@@ -6,6 +6,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import Interface.IIncidentModelView;
 import Model.Incident;
 import View.Activity.ChannelNotification;
@@ -20,7 +22,13 @@ public class IncidentController{
         pref = sharedPreferences;
         editor = pref.edit();
     }
-    public void publishIncident(){
+    public ArrayList<Incident> get(){
+        return null;
+    }
+    public Incident getById(){
+        return null;
+    }
+    public void postIncident(){
         //set variables of 'myObject', etc.
         Incident incident = iIncidentModelView.getIncidentToPublish();
         if(incident!=null){

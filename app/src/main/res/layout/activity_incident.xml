@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/design_default_color_background"
     android:weightSum="100">
 
     <LinearLayout
@@ -18,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context="View.Activity.IncidentActivity">
-
+<!--
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -37,75 +38,20 @@
             android:text="2600 Adresse inventée"
             android:textAlignment="center"
             android:textSize="24sp" />
+-->
 
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:orientation="horizontal"
-            android:weightSum="100">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="50"
-                android:fontFamily="@font/abril_fatface"
-                android:paddingTop="3dp"
-                android:text="Ajouter des photos"
-                android:textAlignment="center"
-                android:textSize="17sp" />
-
-            <Button
-                android:id="@+id/add_incident_photo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="12"
-                android:background="@drawable/ic_add_white_24dp"
-                android:drawableStart="@drawable/ic_add_circle_black_24dp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="27"
-                android:fontFamily="@font/abril_fatface"
-                android:paddingTop="3dp"
-                android:text="total: "
-                android:textAlignment="center"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/picturesCountShower"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="11"
-                android:fontFamily="@font/abril_fatface"
-                android:paddingTop="3dp"
-                android:text="0"
-                android:textAlignment="center"
-                android:textSize="17sp" />
-            <!--<FrameLayout
-                android:id="@+id/fragment_storage_control_container"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="38">
-            </FrameLayout>-->
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/fragment_picture_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="33"></FrameLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="7"
+            android:textColor="@color/colorPrimaryDark"
             android:fontFamily="@font/abril_fatface"
             android:text="Moyen de transport concerné:"
             android:textAlignment="viewStart"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -162,23 +108,83 @@
 
             </HorizontalScrollView>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <TextView
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="50"
+                android:fontFamily="@font/abril_fatface"
+                android:paddingTop="3dp"
+                android:text="Ajouter des photos"
+                android:textAlignment="center"
+                android:textSize="17sp" />
+
+            <Button
+                android:id="@+id/add_incident_photo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="12"
+                android:background="@drawable/ic_add_white_24dp"
+                android:drawableStart="@drawable/ic_add_circle_black_24dp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="27"
+                android:fontFamily="@font/abril_fatface"
+                android:paddingTop="3dp"
+                android:text="total: "
+                android:textAlignment="center"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/picturesCountShower"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="11"
+                android:fontFamily="@font/abril_fatface"
+                android:paddingTop="3dp"
+                android:text="0"
+                android:textAlignment="center"
+                android:textSize="17sp" />
+            <!--<FrameLayout
+                android:id="@+id/fragment_storage_control_container"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="38">
+            </FrameLayout>-->
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fragment_picture_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="33" />
         <TextView
+            android:textColor="@color/colorPrimaryDark"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="9"
             android:fontFamily="@font/abril_fatface"
             android:text="Informations Supplémentaires"
             android:textAlignment="viewStart"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            />
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="15"
-            android:background="@color/design_default_color_background"
-            android:ems="10"
+            android:layout_weight="35"
             android:gravity="start|top"
+
             android:inputType="textMultiLine" />
     </LinearLayout>
 
@@ -188,5 +194,7 @@
         android:layout_height="0dp"
         android:layout_weight="10"
         android:text="Publier"
+        android:textColor="@color/design_default_color_surface"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="@+id/incidentLayout" />
 </LinearLayout>

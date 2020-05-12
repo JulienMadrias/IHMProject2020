@@ -32,10 +32,10 @@ import Interface.IGPSActivity;
 import Interface.IIncidentModelView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import Model.Incident;
 import View.Fragment.AddPhotoDialogFragment;
@@ -112,13 +112,13 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         if(prefBouton.getString("valeurBoutonVehicule","automobile")=="automobile")
             editorBouton.putString("valeurBoutonVehicule", "automobile");
-        editorBouton.commit();
+        editorBouton.apply();
         initialiseMode();
 
         /*longitude= getIntent().getDoubleExtra("longitude",0);
         latitude= getIntent().getDoubleExtra("latitude",0);*/
 
-        getSupportActionBar().setTitle("Déclaration d'incident");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Déclaration d'incident");
         //getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
 
     }
@@ -129,24 +129,24 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         camion.setBackgroundColor(Color.WHITE);
         pieton.setBackgroundColor(Color.WHITE);
         bus.setBackgroundColor(Color.WHITE);
-        switch (prefBouton.getString("valeurBoutonVehicule","automobile")){
+        switch (Objects.requireNonNull(prefBouton.getString("valeurBoutonVehicule", "automobile"))){
             case "automobile":
-                auto.setBackgroundColor(Color.GREEN);
+                auto.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "motard":
-                motard.setBackgroundColor(Color.GREEN);
+                motard.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "cycliste":
-                cycliste.setBackgroundColor(Color.GREEN);
+                cycliste.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "camion":
-                camion.setBackgroundColor(Color.GREEN);
+                camion.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "pieton":
-                pieton.setBackgroundColor(Color.GREEN);
+                pieton.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
             case "bus":
-                bus.setBackgroundColor(Color.GREEN);
+                bus.setBackgroundColor(Color.rgb(98, 0, 238));
                 break;
         }
     }
@@ -171,7 +171,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 photoImportChoiceDialog();
                 break;
             case R.id.publishIncidentButton:
-                incidentController.publishIncident();
+                incidentController.postIncident();
                 editorBouton.clear();
                 editorBouton.commit();
                 finish();

@@ -100,14 +100,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         pref = getContext().getSharedPreferences("MyPref", 0);
         editor = pref.edit();
 
-        isAddEventsOpen = false;
-
-        fabOpenAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_open);
-        fabCloseAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_close);
-        floatButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_open);
-        floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
-        centerButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_opened);
-        centerButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_closed);
+        animationInitailisation(view);
 
         boolean permissionDenied = ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED;
         if (permissionDenied) {
@@ -125,14 +118,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
             mapController = map.getController();
             mapController.setZoom(18.0);
-            GeoPoint startPoint;
-            /*if (!permissionDenied && currentLocation != null) {
-                startPoint = new GeoPoint(getLatitude(), getLongitude());
-            } else {
-                startPoint = new GeoPoint(43.615102, 7.080124);
-            }
-            mapController.setCenter(startPoint);*/
-            //currentLocation = new Location(LocationManager.GPS_PROVIDER);
 
             map.setExpectedCenter(new GeoPoint(43.615102, 7.080124));
 
@@ -145,18 +130,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     1000);
             // centerMapToCurrentPosition();
             ArrayList<OverlayItem> items = new ArrayList<OverlayItem>();
-            Gson gson = new Gson();
+      /*      Gson gson = new Gson();
             Map<String, ?> allEntries = pref.getAll();
-            System.out.println("bite2");
-            /*for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
                 System.out.println(entry.getValue());
                 System.out.println("bite");
                 String json = pref.getString(entry.getKey(), "");
                 Incident incident = gson.fromJson(json, Incident.class);
                 OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
                 items.add(alert);
-            }*/
-
+            }
+        */
             ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(inflater.getContext(), items,
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @Override
@@ -176,6 +160,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             // askGpsPermission();
         }
         return view;
+    }
+
+    private void animationInitailisation(View view) {
+        isAddEventsOpen = false;
+
+        fabOpenAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_open);
+        fabCloseAnim = AnimationUtils.loadAnimation(view.getContext(), R.anim.fab_close);
+        floatButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_open);
+        floatButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.float_button_close);
+        centerButtonOpen = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_opened);
+        centerButtonClose = AnimationUtils.loadAnimation(view.getContext(), R.anim.center_button_event_adder_closed);
     }
 
     private void currentPositionListener() {
@@ -218,7 +213,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 1, listener);
     }
 
-    public void closeEventAdder(){
+    private void closeEventAdder(){
         if(isAddEventsOpen){
             eventAdder.setAnimation(floatButtonClose);
             incidentButtonText.setVisibility(View.INVISIBLE);
@@ -229,7 +224,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             isAddEventsOpen = false;
         }
     }
-    public void openEventAdder(){
+    private void openEventAdder(){
         if(!isAddEventsOpen){
             eventAdder.setAnimation(floatButtonOpen);
             incidentButtonText.setVisibility(View.VISIBLE);
