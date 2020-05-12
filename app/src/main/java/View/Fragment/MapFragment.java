@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,6 +40,7 @@ import Model.Incident;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -49,6 +52,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -72,6 +76,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
     private MapView map;
     private IMapController mapController;
+
+    private int compteurIncidentProche=0;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -134,6 +140,31 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     new Runnable() {
                         public void run() {
                             centerMapToCurrentPosition();
+                            new android.os.Handler().postDelayed(
+                                    new Runnable() {
+                                        public void run() {
+
+                                            Gson gson = new Gson();
+                                            Map<String, ?> allEntries = pref.getAll();
+                                            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                                                System.out.println(entry.getValue());
+
+                                                String json = pref.getString(entry.getKey(), "");
+                                                if(json.contains("{")){
+                                                    Incident incident = gson.fromJson(json, Incident.class);
+                                                    if(calculateDistance(incident.getLatitude(),incident.getLongitude(),getUserCurrentLatitude(),getUserCurrentLongitude())<1)
+                                                        compteurIncidentProche+=1;
+
+
+                                                }
+
+                                            }
+                                            if(compteurIncidentProche!=0){
+                                                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
+                                            }
+                                        }
+                                    },
+                                    3000);
                         }
                     },
                     1000);
@@ -144,6 +175,17 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         return view;
     }
 
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2){
+
+        double pi = Math.PI/180;    // Math.PI / 180
+
+            double a = 0.5 - Math.cos((lat2 - lat1) * pi)/2 +
+                    Math.cos(lat1 * pi) * Math.cos(lat2 * pi) *
+                            (1 - Math.cos((lon2 - lon1) * pi))/2;
+
+            return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+
+    }
     private void currentPositionListener() {
         LocationListener listener = new LocationListener() {
             @Override
@@ -235,11 +277,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     try {
                         // get the Twitter app if possible
                         getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=EmmanuelMacron"));
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=ProjectIhm"));
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     } catch (Exception e) {
                         // no Twitter app, revert to browser
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/EmmanuelMacron"));
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/ProjectIhm"));
                     }
                     getActivity().startActivity(intent);
                 break;
@@ -259,6 +301,20 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
+    private void sendDanger(String channelId, int priority){
+        Bitmap icon = BitmapFactory.decodeResource(requireActivity().getApplicationContext().getResources(),
+                R.drawable.alert);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(requireActivity().getApplicationContext(),channelId)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Attention !")
+                .setContentText("Danger dans votre périmètre")
+                .setLargeIcon(icon)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Attention nous avons détecté "+compteurIncidentProche+" accidents/incidents dans un rayon de 1km !"))
+                .setPriority(priority);
+        ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
+    }
+
 
     private void askGpsPermission(){
 
@@ -364,4 +420,5 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             askGpsPermission();
         }*/
     }
+
 }
