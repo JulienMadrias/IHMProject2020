@@ -430,7 +430,10 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         for (PostImage postImage:ListOfImages.listOfPostImages){
             images.add(PostImage.encode(postImage.getPicture()));
         }
-        return new Incident(longitude,latitude,title,description, images);
+        if(savedLatitude != 0 && savedLongitude != 0){
+            return new Incident(savedLongitude,savedLatitude,title,description, images);
+        }
+        else{ return new Incident(longitude,latitude,title,description, images);}
     }
 
     @Override
