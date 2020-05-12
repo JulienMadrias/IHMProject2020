@@ -77,6 +77,7 @@ public class PostImageListFragment extends Fragment implements AdapterView.OnIte
         }
     }
     public void addNewPostImage(Bitmap bitmap){
+        System.out.println(bitmap);
         ListOfImages.listOfPostImages.add(new PostImage(bitmap));
         resetPostImageList();
     }

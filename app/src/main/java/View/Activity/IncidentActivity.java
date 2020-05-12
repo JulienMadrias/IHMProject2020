@@ -38,10 +38,14 @@ import com.google.android.material.snackbar.Snackbar;
 import org.osmdroid.util.GeoPoint;
 
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import Model.Incident;
+import Model.PostImage;
 import View.Fragment.AddPhotoDialogFragment;
 import View.Fragment.PictureFragment;
 import View.Fragment.PostImageListFragment;
@@ -387,7 +391,6 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
     @Override
     public void onPictureLoad(Bitmap bitmap) {
-        pictureFragment.setImage(bitmap);
     }
 
     @Override
@@ -416,8 +419,12 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         String description= this.description.getText().toString();
         String title= "incident " + prefBouton.getString("valeurBoutonVehicule","");
         //double longitude=43.622448;
-        return new Incident(longitude,latitude,title,description);
-
+        //ListOfImages.listOfPostImages
+        ArrayList<String> images = new ArrayList<>();
+        for (PostImage postImage:ListOfImages.listOfPostImages){
+            images.add(PostImage.encode(postImage.getPicture()));
+        }
+        return new Incident(longitude,latitude,title,description, images);
     }
 
     @Override
