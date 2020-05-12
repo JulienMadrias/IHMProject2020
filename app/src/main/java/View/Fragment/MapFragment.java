@@ -310,7 +310,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setContentText("Danger dans votre périmètre")
                 .setLargeIcon(icon)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Attention nous avons détecté"+compteurIncidentProche+" accidents/incidents dans un rayon de 1km !"))
+                        .bigText("Attention nous avons détecté "+compteurIncidentProche+" accidents/incidents dans un rayon de 1km !"))
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
