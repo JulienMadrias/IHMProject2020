@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -50,6 +52,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -157,7 +160,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
                                             }
                                             if(compteurIncidentProche!=0){
-                                                sendNotificationOnChannel("title","message","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                                                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
                                             }
                                         }
                                     },
@@ -274,11 +277,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     try {
                         // get the Twitter app if possible
                         getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=EmmanuelMacron"));
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=ProjectIhm"));
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     } catch (Exception e) {
                         // no Twitter app, revert to browser
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/EmmanuelMacron"));
+                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/ProjectIhm"));
                     }
                     getActivity().startActivity(intent);
                 break;
@@ -298,6 +301,20 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
+    private void sendDanger(String channelId, int priority){
+        Bitmap icon = BitmapFactory.decodeResource(requireActivity().getApplicationContext().getResources(),
+                R.drawable.alert);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(requireActivity().getApplicationContext(),channelId)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Attention !")
+                .setContentText("Danger dans votre périmètre")
+                .setLargeIcon(icon)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Attention nous avons détecté"+compteurIncidentProche+" accidents/incidents dans un rayon de 1km !"))
+                .setPriority(priority);
+        ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
+    }
+
 
     private void askGpsPermission(){
 
