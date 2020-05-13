@@ -14,10 +14,12 @@ public class Alert {
 
     public static final int ACCIDENT = 1;
     public static final int INCIDENT = 2;
+
+
     public static Drawable getIcon(int type, Context context) throws Throwable {
         switch(type) {
-            case ACCIDENT: return  context.getResources().getDrawable(R.drawable.ic_accident_svgrepo_com_marker);
-            case INCIDENT: return  context.getResources().getDrawable(R.drawable.ic_traffic_jam_svgrepo_com_marker);
+            case ACCIDENT: return  context.getResources().getDrawable(R.drawable.ic_accident_svgrepo_com_marker_big);
+            case INCIDENT: return  context.getResources().getDrawable(R.drawable.ic_traffic_jam_svgrepo_com_marker_big);
             default: throw new Throwable("not made");
         }
     }

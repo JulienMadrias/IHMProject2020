@@ -12,4 +12,8 @@ public class Incident extends Alert {
         super(longitude, latitude, title, description, Alert.INCIDENT);
         this.listOfPostImages = new ArrayList<>(listOfPostImages);
     }
+
+    public ArrayList<String> getListOfPostImages() {
+        return listOfPostImages;
+    }
 }

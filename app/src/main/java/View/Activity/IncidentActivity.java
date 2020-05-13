@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.example.ihmproject.R;
 
+import Controller.AlertController;
 import Controller.IncidentController;
 import Interface.IActivitiesCodeResult;
 import Interface.IGPSActivity;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import Model.Alert;
 import Model.Incident;
 import Model.PostImage;
 import View.Fragment.AddPhotoDialogFragment;
@@ -96,9 +98,10 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
 
         ((ImageButton)findViewById(R.id.add_incident_photo)).setOnClickListener(this);
         ((Button)findViewById(R.id.publishIncidentButton)).setOnClickListener(this);
+        ((Button)findViewById(R.id.cancelIncidentButton)).setOnClickListener(this);
 
         description= (EditText)findViewById(R.id.editText);
-        pref = getApplication().getApplicationContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        pref = getApplication().getApplicationContext().getSharedPreferences(AlertController.INCIDENT_PREF, 0); // 0 - for private mode
         incidentController = new IncidentController(this, this);
         prefBouton = getApplication().getApplicationContext().getSharedPreferences("MyPrefBouton", 0); // 0 - for private mode
         editor = pref.edit();
@@ -200,14 +203,16 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 photoImportChoiceDialog();
                 break;
             case R.id.publishIncidentButton:
-                incidentController.postIncident();
+                incidentController.post();
                 editorBouton.clear();
                 editorBouton.commit();
                 Toast.makeText(this,"Publication de l'incident en cour...",Toast.LENGTH_SHORT).show();
-                setResult(IActivitiesCodeResult.INCIDENT_RESULT_CODE, intent); //The data you want to send back
                 finish();
                 //ChannelNotification notification = new ChannelNotification();
                 //notification.createNotification(getApplicationContext(),getClass());
+                break;
+            case R.id.cancelIncidentButton:
+                finish();
                 break;
             case R.id.voitureButton:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");
@@ -248,7 +253,11 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         }
     }
 
-
+    @Override
+    public void finish() {
+        setResult(IActivitiesCodeResult.INCIDENT_RESULT_CODE, intent);
+        super.finish();
+    }
 
     public void updateMap() {
 

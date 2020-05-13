@@ -184,17 +184,34 @@
             android:layout_height="0dp"
             android:layout_weight="35"
             android:gravity="start|top"
-
+            android:hint="Veuillez décrire l'incident ici"
             android:inputType="textMultiLine" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/publishIncidentButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:text="Publier"
-        android:textColor="@color/design_default_color_surface"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/incidentLayout" />
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintBottom_toBottomOf="@+id/accidentLayout" >
+        <Button
+            android:id="@+id/cancelIncidentButton"
+            android:layout_width="0dp"
+            android:background="@color/design_default_color_surface"
+            android:text="Annuler"
+            android:width="0dp"
+            android:layout_weight="50"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            />
+        <Button
+            android:id="@+id/publishIncidentButton"
+            android:background="@color/colorPrimary"
+            android:text="Publier"
+            android:layout_weight="50"
+            android:layout_height="match_parent"
+            android:textColor="@color/design_default_color_surface"
+            android:layout_width="0dp" />
+    </LinearLayout>
 </LinearLayout>

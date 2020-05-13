@@ -8,31 +8,24 @@ import com.example.ihmproject.R;
 import com.google.gson.Gson;
 
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+import Interface.IAlertController;
 import Interface.IIncidentModelView;
 import Model.Alert;
 import Model.Incident;
 
-public class IncidentController{
-    private Context context;
-    private SharedPreferences pref=null;
-    private SharedPreferences.Editor editor=null;
+public class IncidentController extends AlertController implements IAlertController<Incident> {
     private IIncidentModelView iIncidentModelView;
     public IncidentController(IIncidentModelView iIncidentModelView, Context context){
+        super(context,INCIDENT_PREF);
         this.iIncidentModelView = iIncidentModelView;
-        this.context = context;
-        recupPref();
-    }
-    private void recupPref(){
-        pref = context.getSharedPreferences("MyPref", 0);
-        editor = pref.edit();
     }
     public ArrayList<Incident> get() {
-        //recupPref();
-        Log.d("jiv","récupération  des donnée...");
+        Log.d("jiv","récupération  des incidents...");
         ArrayList<Incident> incidents = new ArrayList<>();
         try{
             Gson gson = new Gson();
@@ -44,6 +37,7 @@ public class IncidentController{
                 if(json.startsWith("{")){
                     Incident incident = gson.fromJson(json, Incident.class);
                     incidents.add(incident);
+
                     iIncidentModelView.addMaker(new GeoPoint(incident.getLatitude(), incident.getLongitude()), incident.getDescription(), Alert.getIcon(incident.getType(),context),false);
                     //OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
                     //items.add(alert);
@@ -55,11 +49,11 @@ public class IncidentController{
         }
         return incidents;
     }
-    public Incident getById(){
+    public Incident getByOverlayItem(OverlayItem overlayItem){
         return null;
     }
 
-    public void postIncident(){
+    public void post(){
         //set variables of 'myObject', etc.
         Incident incident = iIncidentModelView.getIncidentToPublish();
         if(incident!=null){

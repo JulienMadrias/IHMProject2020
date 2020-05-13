@@ -28,9 +28,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
+import Controller.AccidentController;
 import Controller.IncidentController;
+import Interface.IAccidentModelView;
 import Interface.IGPSActivity;
 import Interface.IIncidentModelView;
+import Model.Accident;
+import Model.Alert;
+import View.Activity.AlertDetails;
 import View.Activity.ChannelNotification;
 import Interface.IButtonMapListener;
 
@@ -40,7 +45,6 @@ import Model.Incident;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
 
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -50,18 +54,19 @@ import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.ItemizedOverlayWithFocus;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.OverlayItem;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends Fragment implements View.OnClickListener, LocationListener, IIncidentModelView {
+public class MapFragment extends Fragment implements View.OnClickListener, LocationListener, IIncidentModelView, IAccidentModelView {
+    private ArrayList<Alert> allAlerts;
     private IncidentController incidentController;
+    private AccidentController accidentController;
 
     private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton, saveLocationButton, callEmergencyButton;
-    private TextView incidentButtonText, accidentButtonText;
+    private TextView incidentButtonText, accidentButtonText, saveLocationButtonText;
     private Button reminder;
 
     private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose, centerButtonOpen, centerButtonClose;
@@ -79,6 +84,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private IMapController mapController;
 
     private int compteurIncidentProche=0;
+    private int compteurAccidentProche=0;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -95,27 +101,22 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         eventAdder = (FloatingActionButton) view.findViewById(R.id.addAnEvent);
         incidentButton = (FloatingActionButton) view.findViewById(R.id.incidentButton);
         accidentButton = (FloatingActionButton) view.findViewById(R.id.accidentButton);
-        twitterButton = (FloatingActionButton) view.findViewById(R.id.twitterButton);
         centerMapButton = (FloatingActionButton) view.findViewById(R.id.centerPosition);
         saveLocationButton = (FloatingActionButton) view.findViewById(R.id.saveLocation);
-        callEmergencyButton = (FloatingActionButton) view.findViewById(R.id.callEmergency);
 
-        reminder = view.findViewById(R.id.reminder);
+        //reminder = view.findViewById(R.id.reminder);
 
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
         accidentButtonText = (TextView) view.findViewById(R.id.accidentTextView);
+        saveLocationButtonText = (TextView) view.findViewById(R.id.fixPositionTextView);
 
         eventAdder.setOnClickListener(this);
         incidentButton.setOnClickListener(this);
         accidentButton.setOnClickListener(this);
-        twitterButton.setOnClickListener(this);
         centerMapButton.setOnClickListener(this);
         saveLocationButton.setOnClickListener(this);
-        callEmergencyButton.setOnClickListener(this);
 
 
-        pref = getContext().getSharedPreferences("MyPref", 0);
-        editor = pref.edit();
 
         isAddEventsOpen = false;
 
@@ -134,6 +135,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             savedLocation = currentLocation;
         }
 
+        allAlerts = new ArrayList<>();
+
         assert container != null;
         map = view.findViewById(R.id.map);
         if (map != null) {
@@ -150,23 +153,14 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                             new android.os.Handler().postDelayed(
                                     new Runnable() {
                                         public void run() {
-
-                                            Gson gson = new Gson();
-                                            Map<String, ?> allEntries = pref.getAll();
-                                            for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-                                                System.out.println(entry.getValue());
-
-                                                String json = pref.getString(entry.getKey(), "");
-                                                if(json.contains("{")){
-                                                    Incident incident = gson.fromJson(json, Incident.class);
-                                                    if(calculateDistance(incident.getLatitude(),incident.getLongitude(),getUserCurrentLatitude(),getUserCurrentLongitude())<1)
-                                                        compteurIncidentProche+=1;
+                                            if(getContext()!=null){
+                                                compteurAccidentProche=incidentController.getNumberOfAlert();
+                                                compteurIncidentProche=accidentController.getNumberOfAlert();
+                                                if(compteurIncidentProche!=0||compteurAccidentProche!=0){
+                                                    sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
                                                 }
+                                            }
 
-                                            }
-                                            if(compteurIncidentProche!=0){
-                                                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
-                                            }
                                         }
                                     },
                                     3000);
@@ -174,7 +168,27 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     },
                     1000);
             incidentController = new IncidentController(this, getContext());
-            incidentController.get();
+            accidentController = new AccidentController(this, getContext());
+            refreshMarkers();
+            //ArrayList<OverlayItem> list = new ArrayList<OverlayItem>(items.values());
+            /*ArrayList<OverlayItem> list = new ArrayList<OverlayItem>();
+            ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(this, map.getOverlays(),
+                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                        @Override
+                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                            //Intent intent=new Intent(getContext(), ShowDetailActivity.class);
+                            //intent.putExtra("code", getKey(items,item));
+                            //startActivity(intent);
+
+                            return true;
+                        }
+                        @Override
+                        public boolean onItemLongPress(final int index, final OverlayItem item) {
+                            return false;
+                        }
+                    });
+            mOverlay.setFocusItemsOnTap(true);
+            map.getOverlays().add(mOverlay);*/
 
         }
         return view;
@@ -236,8 +250,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             eventAdder.setAnimation(floatButtonClose);
             incidentButtonText.setVisibility(View.INVISIBLE);
             accidentButtonText.setVisibility(View.INVISIBLE);
+            saveLocationButtonText.setVisibility(View.INVISIBLE);
             incidentButton.setAnimation(fabCloseAnim);
             accidentButton.setAnimation(fabCloseAnim);
+            saveLocationButton.setAnimation(fabCloseAnim);
             //centerMapButton.setAnimation(centerButtonClose);
             isAddEventsOpen = false;
         }
@@ -247,8 +263,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             eventAdder.setAnimation(floatButtonOpen);
             incidentButtonText.setVisibility(View.VISIBLE);
             accidentButtonText.setVisibility(View.VISIBLE);
+            saveLocationButtonText.setVisibility(View.VISIBLE);
             incidentButton.setAnimation(fabOpenAnim);
             accidentButton.setAnimation(fabOpenAnim);
+            saveLocationButton.setAnimation(fabOpenAnim);
             //centerMapButton.setAnimation(centerButtonOpen);
             isAddEventsOpen = true;
         }
@@ -256,8 +274,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.reminder:
-                sendNotificationOnChannel("Attention","Nous vous informons que il y a eu un nouveau incident.","channel1", NotificationCompat.PRIORITY_DEFAULT);
+            //case R.id.reminder:
+              //  sendNotificationOnChannel("Attention","Nous vous informons que il y a eu un nouveau incident.","channel1", NotificationCompat.PRIORITY_DEFAULT);
             case R.id.addAnEvent:
                 if(isAddEventsOpen){
                     closeEventAdder();
@@ -274,21 +292,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 break;
-                case R.id.twitterButton:
-
-                    closeEventAdder();
-                    Intent intent = null;
-                    try {
-                        // get the Twitter app if possible
-                        getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=ProjectIhm"));
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    } catch (Exception e) {
-                        // no Twitter app, revert to browser
-                        intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/ProjectIhm"));
-                    }
-                    getActivity().startActivity(intent);
-                break;
             case R.id.centerPosition:
                 if(getView()!=null)
                     Snackbar.make(getView(), "Position courante ... ", Snackbar.LENGTH_LONG)
@@ -299,9 +302,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 Snackbar.make(getView(), "Position courante enregistrée ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 savedLocation = currentLocation;
-            case R.id.callEmergency:
-                mCallBack.mapIntentButtonClicked(v);
-                break;
         }
     }
     private void sendNotificationOnChannel(String title, String message, String channelId, int priority){
@@ -312,6 +312,11 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
+    private String getAlertNotification(){
+        return "Attention nous avons détecté "+(compteurAccidentProche>0&&compteurIncidentProche>0?
+                compteurAccidentProche+" accidents "+" et "+compteurIncidentProche+"incidents":
+                compteurAccidentProche>0? compteurAccidentProche+" accidents": compteurIncidentProche+" incidents");
+    }
     private void sendDanger(String channelId, int priority){
         Bitmap icon = BitmapFactory.decodeResource(requireActivity().getApplicationContext().getResources(),
                 R.drawable.alert);
@@ -321,7 +326,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setContentText("Danger dans votre périmètre")
                 .setLargeIcon(icon)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Attention nous avons détecté "+compteurIncidentProche+" accidents/incidents dans un rayon de 1km !"))
+                        .bigText(getAlertNotification()))
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
@@ -381,13 +386,39 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         return null;
     }
     private void cleanOtherMarkers(){
+        allAlerts.clear();
         map.getOverlays().clear();
         resetCurrentPostionMarker();
     }
     public void refreshMarkers(){
         cleanOtherMarkers();
-        incidentController.get();
-        Log.d("jiv","current Long: "+getUserCurrentLongitude()+" Lat: "+getUserCurrentLatitude());
+        allAlerts.addAll(incidentController.get());
+        allAlerts.addAll(accidentController.get());
+        addAllOverlayItems();
+    }
+    private void addAllOverlayItems(){
+        if(getContext()!=null){
+            ArrayList<OverlayItem> list = new ArrayList<OverlayItem>();
+            for (Alert alert:allAlerts){
+                list.add(new OverlayItem(alert.getTitle(),alert.getDescription(),new GeoPoint(alert.getLatitude(),alert.getLongitude()) ));
+            }
+            ItemizedOverlayWithFocus<OverlayItem> mOverlay = new ItemizedOverlayWithFocus<OverlayItem>(getContext(), list,
+                    new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
+                        @Override
+                        public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+                            Intent intent=new Intent(getContext(), AlertDetails.class);
+                            // intent.putExtra("code", getKey(items,item));
+                            startActivity(intent);
+                            return true;
+                        }
+                        @Override
+                        public boolean onItemLongPress(final int index, final OverlayItem item) {
+                            return false;
+                        }
+                    });
+            mOverlay.setFocusItemsOnTap(true);
+            map.getOverlays().add(mOverlay);
+        }
     }
     @Override
     public void addMaker(GeoPoint startPoint, String title, Drawable icon, boolean userPosition){
@@ -406,6 +437,12 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         Log.d("jiv","current Long: "+getUserCurrentLongitude()+" Lat: "+getUserCurrentLatitude());
         map.invalidate();
     }
+
+    @Override
+    public Accident getAccidentToPublish() {
+        return null;
+    }
+
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
@@ -438,6 +475,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
             mapController.setZoom(20.0);
             resetCurrentPostionMarker();
+            if(getActivity()!=null)
             if(requireActivity().getSharedPreferences("setting", 0).getBoolean("followedGpsCamera",true))
             map.setExpectedCenter(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()));
             // mapController.animateTo(new GeoPoint(getLatitude(),getLongitude()));

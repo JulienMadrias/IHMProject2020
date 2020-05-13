@@ -7,32 +7,26 @@ import android.util.Log;
 import com.google.gson.Gson;
 
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 import java.util.Map;
 
-import Interface.IIncidentModelView;
+import Interface.IAccidentModelView;
+import Interface.IAlertController;
 import Model.Alert;
-import Model.Incident;
+import Model.Accident;
 
-public class AccidentController {
-    private Context context;
-    private SharedPreferences pref=null;
-    private SharedPreferences.Editor editor=null;
-    private IIncidentModelView iIncidentModelView;
-    public AccidentController(IIncidentModelView iIncidentModelView, Context context){
-        this.iIncidentModelView = iIncidentModelView;
-        this.context = context;
-        recupPref();
+public class AccidentController extends AlertController implements IAlertController<Accident> {
+    private IAccidentModelView iAccidentModelView;
+    public AccidentController(IAccidentModelView iAccidentModelView, Context context){
+        super(context,ACCIDENT_PREF);
+        this.iAccidentModelView = iAccidentModelView;
     }
-    private void recupPref(){
-        pref = context.getSharedPreferences("MyPref", 0);
-        editor = pref.edit();
-    }
-    public ArrayList<Incident> get() {
+    public ArrayList<Accident> get() {
         //recupPref();
-        Log.d("jiv","récupération  des donnée...");
-        ArrayList<Incident> incidents = new ArrayList<>();
+        Log.d("jiv","récupération  des accidents...");
+        ArrayList<Accident> Accidents = new ArrayList<>();
         try{
             Gson gson = new Gson();
             Map<String, ?> allEntries = pref.getAll();
@@ -41,10 +35,10 @@ public class AccidentController {
                 assert json != null;
                 Log.d("jiv",json);
                 if(json.startsWith("{")){
-                    Incident incident = gson.fromJson(json, Incident.class);
-                    incidents.add(incident);
-                    iIncidentModelView.addMaker(new GeoPoint(incident.getLatitude(), incident.getLongitude()), incident.getDescription(), Alert.getIcon(incident.getType(),context),false);
-                    //OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
+                    Accident Accident = gson.fromJson(json, Accident.class);
+                    Accidents.add(Accident);
+                    iAccidentModelView.addMaker(new GeoPoint(Accident.getLatitude(), Accident.getLongitude()), Accident.getDescription(), Alert.getIcon(Accident.getType(),context),false);
+                    //OverlayItem alert = new OverlayItem(Accident.getTitle(), Accident.getDescription(), new GeoPoint(Accident.getLongitude(), Accident.getLatitude()));
                     //items.add(alert);
                 }
             }
@@ -52,22 +46,22 @@ public class AccidentController {
         }catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-        return incidents;
+        return Accidents;
     }
-    public Incident getById(){
+    public Accident getByOverlayItem(OverlayItem overlayItem){
         return null;
     }
 
-    public void postIncident(){
+    public void post(){
         //set variables of 'myObject', etc.
-        Incident incident = iIncidentModelView.getIncidentToPublish();
-        if(incident!=null){
+        Accident Accident = iAccidentModelView.getAccidentToPublish();
+        if(Accident!=null){
             Gson gson = new Gson();
-            String json = gson.toJson(incident);
-            editor.putString(incident.getTitle()+incident.getLongitude(), json);
+            String json = gson.toJson(Accident);
+            editor.putString(Accident.getTitle()+Accident.getLongitude(), json);
             editor.commit();
-            json = pref.getString(incident.getTitle()+incident.getLongitude(), "");
-            Incident obj = gson.fromJson(json, Incident.class);
+            json = pref.getString(Accident.getTitle()+Accident.getLongitude(), "");
+            Accident obj = gson.fromJson(json, Accident.class);
             Log.d("jiv",obj.getDescription());
             Log.d("jiv",obj.toString());
             //ChannelNotification notification = new ChannelNotification();

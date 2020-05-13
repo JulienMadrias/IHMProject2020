@@ -9,7 +9,7 @@
     android:weightSum="100">
 
     <LinearLayout
-        android:id="@+id/incidentLayout"
+        android:id="@+id/accidentLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
@@ -46,37 +46,37 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/pietonButton"
+                    android:id="@+id/pietonButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Piéton" />
 
                 <Button
-                    android:id="@+id/veloButton"
+                    android:id="@+id/veloButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Vélo" />
 
                 <Button
-                    android:id="@+id/motoButton"
+                    android:id="@+id/motoButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Moto" />
 
                 <Button
-                    android:id="@+id/voitureButton"
+                    android:id="@+id/voitureButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Voiture" />
 
                 <Button
-                    android:id="@+id/busButton"
+                    android:id="@+id/busButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bus" />
 
                 <Button
-                    android:id="@+id/camionButton"
+                    android:id="@+id/camionButtonAccident"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Camion" />
@@ -85,11 +85,22 @@
         </HorizontalScrollView>
     </LinearLayout>
 
+        <TextView
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:fontFamily="@font/abril_fatface"
+            android:textSize="24sp"
+            android:textAlignment="viewStart"
+            android:text="Nombres de véhicules: "
+            />
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/casualtyNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:text="1"
             android:hint="Nombres de véhicules"
             android:inputType="number" />
 
@@ -105,12 +116,12 @@
         />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextAccident"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="35"
         android:gravity="start|top"
-
+        android:hint="Veuillez décrire l'accident ici"
         android:inputType="textMultiLine" />
 
     <FrameLayout
@@ -120,15 +131,35 @@
         android:layout_weight="33" />
         </LinearLayout>
 
-    <Button
-        android:id="@+id/publishIncidentButton"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="10"
-        android:background="@color/colorPrimary"
-        android:text="Publier"
-        android:textColor="@color/design_default_color_surface"
-        app:layout_constraintBottom_toBottomOf="@+id/incidentLayout" />
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintBottom_toBottomOf="@+id/accidentLayout" >
+        <Button
+            android:id="@+id/cancelAccidentButton"
+            android:layout_width="0dp"
+            android:background="@color/design_default_color_surface"
+            android:text="Annuler"
+            android:width="0dp"
+            android:layout_weight="50"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimary"
+            />
+        <Button
+            android:id="@+id/publishAccidentButton"
+            android:background="@color/colorPrimary"
+            android:text="Publier"
+            android:layout_weight="50"
+            android:layout_height="match_parent"
+            android:textColor="@color/design_default_color_surface"
+            android:layout_width="0dp" />
+    </LinearLayout>
+
 
 
 </LinearLayout>

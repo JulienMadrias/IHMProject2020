@@ -13,16 +13,6 @@
 
     </org.osmdroid.views.MapView>
 
-    <Button
-        android:id="@+id/reminder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:text="informer les autres"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="5dp"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/accidentTextView"
         android:layout_width="wrap_content"
@@ -56,6 +46,22 @@
         app:layout_constraintBottom_toTopOf="@+id/addAnEvent"
         app:layout_constraintEnd_toStartOf="@+id/incidentButton"
         app:layout_constraintTop_toTopOf="@+id/incidentButton" />
+    <TextView
+        android:id="@+id/fixPositionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/fab_text_background"
+        android:fontFamily="@font/raleway_semibold"
+        android:paddingStart="16dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="8dp"
+        android:visibility="invisible"
+        android:text="Fixer la position courante"
+        app:layout_constraintBottom_toTopOf="@+id/accidentButton"
+        app:layout_constraintEnd_toStartOf="@+id/saveLocation"
+        app:layout_constraintTop_toTopOf="@+id/saveLocation" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAnEvent"
@@ -93,7 +99,20 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/incidentButton"
         app:layout_constraintEnd_toEndOf="parent" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/saveLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/design_default_color_background"
+        android:clickable="true"
+        android:contentDescription="center"
+        android:src="@drawable/ic_location_on_blue_24dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/accidentButton"
+        app:layout_constraintEnd_toEndOf="parent"  />
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/twitterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,6 +126,34 @@
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
+-->
+    <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/centerPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="center"
+        android:clickable="true"
+        android:visibility="visible"
+        android:src="@drawable/ic_menu_mylocation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/callEmergency" />
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/callEmergency"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:contentDescription="center"
+        android:src="@drawable/ic_call_gray_24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />-->
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/centerPosition"
@@ -120,33 +167,10 @@
         android:visibility="visible"
         android:src="@drawable/ic_menu_mylocation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/callEmergency" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/callEmergency"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:clickable="true"
-        android:contentDescription="center"
-        android:src="@drawable/ic_call_gray_24dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/twitterButton"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/saveLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:clickable="true"
-        android:contentDescription="center"
-        android:src="@drawable/ic_location_on_blue_24dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/centerPosition"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 
 

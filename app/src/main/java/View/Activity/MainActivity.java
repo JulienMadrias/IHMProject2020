@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.ihmproject.R;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
@@ -109,14 +111,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        if (menuItem.getItemId() == R.id.nav_transport_mode) {
-            getSupportActionBar().setTitle("Mode de déplacement");
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ModeDeDeplacementFragment()).commit();
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        if(menuItem.getItemId() == R.id.SwitchGPS || menuItem.getItemId() == R.id.switchGpsMain) {
-            getSharedPreferences("setting", 0).edit().putBoolean("followedGpsCamera",((Switch)findViewById(R.id.switchGpsMain)).isChecked()).apply();
+        switch (menuItem.getItemId()){
+            case R.id.twitterButton:
+                Intent intent = null;
+                try {
+                    // get the Twitter app if possible
+                    getPackageManager().getPackageInfo("com.twitter.android", 0);
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?screen_name=ProjectIhm"));
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                } catch (Exception e) {
+                    // no Twitter app, revert to browser
+                    intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/ProjectIhm"));
+                }
+                startActivity(intent);
+                break;
+            case R.id.callEmergency:
+                intent = new Intent(this, EmergencyCallActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.nav_transport_mode:
+                getSupportActionBar().setTitle("Mode de déplacement");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new ModeDeDeplacementFragment()).commit();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                break;
+            case R.id.SwitchGPS:
+            case R.id.switchGpsMain:
+                getSharedPreferences("setting", 0).edit().putBoolean("followedGpsCamera",((Switch)findViewById(R.id.switchGpsMain)).isChecked()).apply();
+                break;
         }
         return true;
     }
@@ -187,9 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 resultCode = ACCIDENT_RESULT_CODE;
                 intent = new Intent(this, AccidentActivity.class);
                 inititateIntent();
-                break;
-            case R.id.callEmergency:
-                intent = new Intent(this, EmergencyCallActivity.class);
                 break;
         }
         if(intent != null){

@@ -21,14 +21,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="View.Activity.EmergencyCallActivity"
+        <activity android:name="View.Activity.AlertDetails"></activity>
+        <activity
+            android:name="View.Activity.EmergencyCallActivity"
             android:parentActivityName="View.Activity.MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"></activity>
-        <activity android:name="View.Activity.DescriptionActivity"
+            tools:ignore="LockedOrientationActivity" />
+        <activity
+            android:name="View.Activity.DescriptionActivity"
             android:parentActivityName="View.Activity.MainActivity"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name="View.Activity.AccidentActivity"
             android:parentActivityName="View.Activity.MainActivity"
