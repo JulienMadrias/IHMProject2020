@@ -42,19 +42,19 @@ public class ModeDeDeplacementFragment extends Fragment implements View.OnClickL
         preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = preferences.edit();
 
-        auto = ((Button) view.findViewById(R.id.mode_automobiliste_button));
+        auto = ((Button) view.findViewById(R.id.general_emergency));
         auto.setOnClickListener(this);
 
-        motard = ((Button) view.findViewById(R.id.mode_motard_button));
+        motard = ((Button) view.findViewById(R.id.general_call));
         motard.setOnClickListener(this);
 
-        cycliste = ((Button) view.findViewById(R.id.mode_cycliste_button));
+        cycliste = ((Button) view.findViewById(R.id.pompier));
         cycliste.setOnClickListener(this);
 
-        passager = ((Button) view.findViewById(R.id.mode_passager_button));
+        passager = ((Button) view.findViewById(R.id.police_secour));
         passager.setOnClickListener(this);
 
-        pieton = ((Button) view.findViewById(R.id.mode_pieton_button));
+        pieton = ((Button) view.findViewById(R.id.samu));
         pieton.setOnClickListener(this);
 
         bus = ((Button) view.findViewById(R.id.mode_bus_button));
@@ -78,7 +78,7 @@ public class ModeDeDeplacementFragment extends Fragment implements View.OnClickL
             case R.id.close_mode_transport:
                 mCallBack.onCloseModeTransportButtonClicked(v);
                 break;
-            case R.id.mode_automobiliste_button:
+            case R.id.general_emergency:
                 editor.putString("USER_MODE", "automobile");
                 editor.commit();
                 initialiseMode();
@@ -88,22 +88,22 @@ public class ModeDeDeplacementFragment extends Fragment implements View.OnClickL
                 editor.commit();
                 initialiseMode();
                 break;
-            case R.id.mode_pieton_button:
+            case R.id.samu:
                 editor.putString("USER_MODE", "pieton");
                 editor.commit();
                 initialiseMode();
                 break;
-            case R.id.mode_motard_button:
+            case R.id.general_call:
                 editor.putString("USER_MODE", "motard");
                 editor.commit();
                 initialiseMode();
                 break;
-            case R.id.mode_passager_button:
+            case R.id.police_secour:
                 editor.putString("USER_MODE", "passager");
                 editor.commit();
                 initialiseMode();
                 break;
-            case R.id.mode_cycliste_button:
+            case R.id.pompier:
                 editor.putString("USER_MODE", "cycliste");
                 editor.commit();
                 initialiseMode();

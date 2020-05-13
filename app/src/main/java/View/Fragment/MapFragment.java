@@ -53,13 +53,14 @@ import org.osmdroid.views.overlay.OverlayItem;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class MapFragment extends Fragment implements View.OnClickListener, LocationListener, IIncidentModelView {
     private IncidentController incidentController;
 
-    private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton, saveLocationButton;
+    private FloatingActionButton eventAdder, incidentButton, twitterButton, accidentButton, centerMapButton, saveLocationButton, callEmergencyButton;
     private TextView incidentButtonText, accidentButtonText;
     private Button reminder;
 
@@ -83,7 +84,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mCallBack = (IButtonMapListener) getActivity();
-
     }
 
     @Nullable
@@ -98,6 +98,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         twitterButton = (FloatingActionButton) view.findViewById(R.id.twitterButton);
         centerMapButton = (FloatingActionButton) view.findViewById(R.id.centerPosition);
         saveLocationButton = (FloatingActionButton) view.findViewById(R.id.saveLocation);
+        callEmergencyButton = (FloatingActionButton) view.findViewById(R.id.callEmergency);
+
         reminder = view.findViewById(R.id.reminder);
 
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
@@ -109,6 +111,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         twitterButton.setOnClickListener(this);
         centerMapButton.setOnClickListener(this);
         saveLocationButton.setOnClickListener(this);
+        callEmergencyButton.setOnClickListener(this);
+
 
         pref = getContext().getSharedPreferences("MyPref", 0);
         editor = pref.edit();
@@ -157,8 +161,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                                     Incident incident = gson.fromJson(json, Incident.class);
                                                     if(calculateDistance(incident.getLatitude(),incident.getLongitude(),getUserCurrentLatitude(),getUserCurrentLongitude())<1)
                                                         compteurIncidentProche+=1;
-
-
                                                 }
 
                                             }
@@ -271,7 +273,6 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     mCallBack.mapIntentButtonClicked(v);
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                sendNotificationOnChannel("Confirmation de publication","Nous vous informons que votre accident a bien été publié.","channel1", NotificationCompat.PRIORITY_DEFAULT);
                 break;
                 case R.id.twitterButton:
 
@@ -298,6 +299,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 Snackbar.make(getView(), "Position courante enregistrée ", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 savedLocation = currentLocation;
+            case R.id.callEmergency:
+                mCallBack.mapIntentButtonClicked(v);
+                break;
         }
     }
     private void sendNotificationOnChannel(String title, String message, String channelId, int priority){
@@ -351,7 +355,25 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
             resetCurrentPostionMarker();
     }
     private void resetCurrentPostionMarker(){
-        addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", getActivity().getResources().getDrawable(R.drawable.ic_location_on_blue_24dp),true);
+        try {
+            if(getActivity()!=null){
+                addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", requireActivity().getResources().getDrawable(R.drawable.ic_location_on_blue_24dp),true);
+            }else{
+                new android.os.Handler().postDelayed(
+                        new Runnable() {
+                            public void run() {
+                                try {
+                                    addMaker(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()), "Position Actuelle", requireActivity().getResources().getDrawable(R.drawable.ic_location_on_blue_24dp), true);
+                                }catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                            }
+                        }, 2000);
+            };
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -416,6 +438,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
 
             mapController.setZoom(20.0);
             resetCurrentPostionMarker();
+            if(requireActivity().getSharedPreferences("setting", 0).getBoolean("followedGpsCamera",true))
             map.setExpectedCenter(new GeoPoint(getUserCurrentLatitude(), getUserCurrentLongitude()));
             // mapController.animateTo(new GeoPoint(getLatitude(),getLongitude()));
        /* }

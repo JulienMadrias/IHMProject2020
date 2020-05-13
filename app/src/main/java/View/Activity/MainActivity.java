@@ -2,6 +2,7 @@ package View.Activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.WindowInsets;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,13 +33,14 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.Objects;
 
 import Interface.IActivitiesCodeResult;
+import Interface.IGPSActivity;
 import View.Fragment.MapFragment;
 import View.Fragment.ModeDeDeplacementFragment;
 import Interface.IButtonDrawerClickListener;
 import Interface.IButtonMapListener;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener, IActivitiesCodeResult {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, IButtonDrawerClickListener, View.OnClickListener, IButtonMapListener, IActivitiesCodeResult, IGPSActivity {
     private Intent intent;
     private DrawerLayout drawerLayout;
 
@@ -111,13 +115,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new ModeDeDeplacementFragment()).commit();
             drawerLayout.closeDrawer(GravityCompat.START);
         }
-        if(menuItem.getItemId() == R.id.SwitchGPS) {
-            permissionGranted = ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-            if (!permissionGranted) {
-
-            }
-            if (permissionGranted) {
-            }
+        if(menuItem.getItemId() == R.id.SwitchGPS || menuItem.getItemId() == R.id.switchGpsMain) {
+            getSharedPreferences("setting", 0).edit().putBoolean("followedGpsCamera",((Switch)findViewById(R.id.switchGpsMain)).isChecked()).apply();
         }
         return true;
     }
@@ -146,17 +145,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mapFragment.refreshMarkers();
-        switch (resultCode){
-            case INCIDENT_RESULT_CODE:
-                break;
-            case ACCIDENT_RESULT_CODE:
-                break;
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode==REQUEST_GPS_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this,"Permission d'accès Gps acceptée",Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(this,"Permission d'accès lecture refusée",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (resultCode){
+            case INCIDENT_RESULT_CODE:
+            case ACCIDENT_RESULT_CODE:
+                mapFragment.refreshMarkers();
+                break;
+        }
+    }
+    private void inititateIntent(){
+        if(intent!=null){
+            intent.putExtra("longitude",mapFragment.getUserCurrentLongitude());
+            intent.putExtra("latitude",mapFragment.getUserCurrentLatitude());
+            intent.putExtra("saveLatitude", mapFragment.getSavedLatitude());
+            intent.putExtra("saveLongitude", mapFragment.getSavedLongitude());
+        }
+    }
     @Override
     public void mapIntentButtonClicked(View v) {
         int resultCode = 0;
@@ -164,21 +181,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.incidentButton :
                 resultCode = INCIDENT_RESULT_CODE;
                 intent = new Intent(this, IncidentActivity.class);
+                inititateIntent();
                 break;
             case R.id.accidentButton:
                 resultCode = ACCIDENT_RESULT_CODE;
                 intent = new Intent(this, AccidentActivity.class);
-
+                inititateIntent();
+                break;
+            case R.id.callEmergency:
+                intent = new Intent(this, EmergencyCallActivity.class);
                 break;
         }
         if(intent != null){
-            intent.putExtra("longitude",mapFragment.getUserCurrentLongitude());
-            intent.putExtra("latitude",mapFragment.getUserCurrentLatitude());
-            intent.putExtra("saveLatitude", mapFragment.getSavedLatitude());
-            intent.putExtra("saveLongitude", mapFragment.getSavedLongitude());
+            inititateIntent();
             // intent.putExtra("name",mapFragment.getLocationName());
         startActivityForResult(intent,resultCode);
         mapFragment.resetSavedLocation();
         }
+    }
+
+    @Override
+    public void moveCamera() {
+
     }
 }

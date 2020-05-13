@@ -120,7 +120,20 @@
         android:visibility="visible"
         android:src="@drawable/ic_menu_mylocation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/twitterButton" />
+        app:layout_constraintBottom_toTopOf="@+id/callEmergency" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/callEmergency"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:clickable="true"
+        android:contentDescription="center"
+        android:src="@drawable/ic_call_gray_24dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/twitterButton"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/saveLocation"

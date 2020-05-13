@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.ihmproject.R;
 
 import Controller.IncidentController;
+import Interface.IActivitiesCodeResult;
 import Interface.IGPSActivity;
 import Interface.IIncidentModelView;
 
@@ -203,6 +204,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 editorBouton.clear();
                 editorBouton.commit();
                 Toast.makeText(this,"Publication de l'incident en cour...",Toast.LENGTH_SHORT).show();
+                setResult(IActivitiesCodeResult.INCIDENT_RESULT_CODE, intent); //The data you want to send back
                 finish();
                 //ChannelNotification notification = new ChannelNotification();
                 //notification.createNotification(getApplicationContext(),getClass());
@@ -356,7 +358,6 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         switch (requestCode){
             case COMMENT_RESULT_CODE:
                 assert data != null;
-                Toast.makeText(this, "arrivé: "+data.getStringExtra(COMMENT_RETURN_ID),Toast.LENGTH_SHORT).show();
                 ((EditText)findViewById(R.id.editText)).setText(data.getStringExtra(COMMENT_RETURN_ID));
                 break;
             case REQUEST_CAMERA:

@@ -11,8 +11,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
         android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_directions_walk_black_24dp"
-        android:text="Piéton"
+        android:drawableStart="@drawable/ic_call_black_24dp"
+        android:text="Samu"
         android:textAlignment="viewStart"
         android:textSize="20sp" />
 
@@ -25,8 +25,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
         android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_directions_bike_black_24dp"
-        android:text=" Cycliste"
+        android:drawableStart="@drawable/ic_call_black_24dp"
+        android:text=" Pompier"
         android:textAlignment="viewStart"
         android:textSize="20sp" />
 
@@ -39,20 +39,11 @@
         android:layout_marginTop="11dp"
         android:layout_marginEnd="3dp"
         android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_motorcycle_black_24dp"
-        android:text="  Motard"
+        android:drawableStart="@drawable/ic_call_black_24dp"
+        android:text="  Général"
         android:textAlignment="viewStart"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/close_mode_transport"
-        android:layout_width="119dp"
-        android:layout_height="53dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="3dp"
-        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
-        android:text="Retour" />
 
     <Button
         android:id="@+id/police_secour"
@@ -63,36 +54,9 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="0dp"
         android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_local_taxi_black_24dp"
-        android:text=" Passager"
+        android:drawableStart="@drawable/ic_call_black_24dp"
+        android:text=" Police Sécour"
         android:textAlignment="viewStart"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/general_emergency"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_below="@+id/mode_bus_button"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
-        android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_directions_car_black_24dp"
-        android:text="  Automobiliste"
-        android:textAlignment="viewStart"
-        android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/mode_bus_button"
-        android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:layout_below="@+id/samu"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="0dp"
-        android:background="#FFFFFF"
-        android:drawableStart="@drawable/ic_directions_bus_black_24dp"
-        android:text="  Bus"
-        android:textAlignment="viewStart"
-        android:textSize="20sp" />
 </RelativeLayout>
