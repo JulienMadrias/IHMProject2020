@@ -1,6 +1,7 @@
 package View.Fragment;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +38,7 @@ import Interface.IButtonMapListener;
 import com.example.ihmproject.R;
 
 import Model.Incident;
+import View.Activity.MainActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -257,7 +259,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.reminder:
-                sendNotificationOnChannel("Attention","Nous vous informons que il y a eu un nouveau incident.","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                createNotification("channel");
+                sendNotificationOnChannel("Attention","Il y a eu un nouveau incident.","channel1", NotificationCompat.PRIORITY_DEFAULT);
             case R.id.addAnEvent:
                 if(isAddEventsOpen){
                     closeEventAdder();
@@ -273,6 +276,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     mCallBack.mapIntentButtonClicked(v);
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                
                 break;
                 case R.id.twitterButton:
 
@@ -325,7 +329,19 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                 .setPriority(priority);
         ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
     }
+    public void createNotification(String channelId){
 
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(requireActivity().getApplicationContext(),channelId)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Attention!")
+                .setContentText("Il y a un nouveau incident!")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+        ChannelNotification.getNotificationManager().notify(++notificationId ,notification.build());
+
+
+
+    }
 
     private void askGpsPermission(){
 
