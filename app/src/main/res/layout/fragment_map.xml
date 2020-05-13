@@ -146,7 +146,7 @@
         android:src="@drawable/ic_location_on_blue_24dp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/centerPosition"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 
