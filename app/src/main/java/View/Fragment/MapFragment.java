@@ -101,8 +101,8 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         centerMapButton = (FloatingActionButton) view.findViewById(R.id.centerPosition);
         saveLocationButton = (FloatingActionButton) view.findViewById(R.id.saveLocation);
         callEmergencyButton = (FloatingActionButton) view.findViewById(R.id.callEmergency);
+        reminder = (Button)view.findViewById(R.id.reminder);
 
-        reminder = view.findViewById(R.id.reminder);
 
         incidentButtonText = (TextView) view.findViewById(R.id.incidentTextView);
         accidentButtonText = (TextView) view.findViewById(R.id.accidentTextView);
@@ -114,6 +114,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
         centerMapButton.setOnClickListener(this);
         saveLocationButton.setOnClickListener(this);
         callEmergencyButton.setOnClickListener(this);
+        reminder.setOnClickListener(this);
 
 
         pref = getContext().getSharedPreferences("MyPref", 0);
@@ -259,8 +260,10 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.reminder:
-                createNotification("channel");
+                createNotification("channel1");
+//                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
                 sendNotificationOnChannel("Attention","Il y a eu un nouveau incident.","channel1", NotificationCompat.PRIORITY_DEFAULT);
+                break;
             case R.id.addAnEvent:
                 if(isAddEventsOpen){
                     closeEventAdder();
@@ -276,7 +279,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     mCallBack.mapIntentButtonClicked(v);
                 Snackbar.make(v, "Button d'accident cliqué", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                
+
                 break;
                 case R.id.twitterButton:
 
