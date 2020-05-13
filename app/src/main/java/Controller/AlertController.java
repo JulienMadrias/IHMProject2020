@@ -20,7 +20,6 @@ public class AlertController {
         editor = pref.edit();
     }
     public int getNumberOfAlert() {
-
-        return 0;
+        return pref.getAll().size();
     }
 }
