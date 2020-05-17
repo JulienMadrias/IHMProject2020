@@ -37,7 +37,6 @@ public class IncidentController extends AlertController implements IAlertControl
                 if(json.startsWith("{")){
                     Incident incident = gson.fromJson(json, Incident.class);
                     incidents.add(incident);
-
                     iIncidentModelView.addMaker(new GeoPoint(incident.getLatitude(), incident.getLongitude()), incident.getDescription(), Alert.getIcon(incident.getType(),context),false);
                     //OverlayItem alert = new OverlayItem(incident.getTitle(), incident.getDescription(), new GeoPoint(incident.getLongitude(), incident.getLatitude()));
                     //items.add(alert);

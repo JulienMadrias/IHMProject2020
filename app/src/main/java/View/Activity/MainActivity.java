@@ -135,9 +135,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         new ModeDeDeplacementFragment()).commit();
                 drawerLayout.closeDrawer(GravityCompat.START);
                 break;
-            case R.id.SwitchGPS:
+            //case R.id.SwitchGPS:
             case R.id.switchGpsMain:
+                //((Switch)findViewById(R.id.switchGpsMain)).setEnabled(((Switch)findViewById(R.id.switchGpsMain)).isChecked());
+                Toast.makeText(this, ((Switch)findViewById(R.id.switchGpsMain)).isChecked()?"La caméra viendra automatiquement à votre position actuellemnt une fois actuelisée":"Vous pourrez naviguez sans être dérangé par l'actualisation de votre position",Toast.LENGTH_SHORT).show();
                 getSharedPreferences("setting", 0).edit().putBoolean("followedGpsCamera",((Switch)findViewById(R.id.switchGpsMain)).isChecked()).apply();
+                break;
+            case R.id.shareAppli:
+                String messageToSend = getString(R.string.app_share_message);
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT,messageToSend);
+                intent.setType("text/plain");
+                startActivity(intent);
+                break;
+            case R.id.stopAppli:
+                finish();
                 break;
         }
         return true;

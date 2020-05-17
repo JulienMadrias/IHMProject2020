@@ -1,11 +1,13 @@
 package View.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -153,6 +155,20 @@ public class AccidentActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
+    private void sendDanger(String channelId, int priority){
+        Bitmap icon = BitmapFactory.decodeResource(this.getApplicationContext().getResources(),
+                R.drawable.ic_accident_svgrepo_com_marker);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this.getApplicationContext(),channelId)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Information !")
+                .setContentText("Publication d'accident éffectuée")
+                .setLargeIcon(icon)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Accident publié avc succès"))
+                .setPriority(priority);
+        ChannelNotification.getNotificationManager().notify(1,notification.build());
+    }
     @Override
     public void onClick(View v) {
 
@@ -163,9 +179,8 @@ public class AccidentActivity extends AppCompatActivity implements View.OnClickL
                 editorBouton.commit();
                 Toast.makeText(this,"Publication de l'accident en cour...",Toast.LENGTH_SHORT).show();
                 setResult(IActivitiesCodeResult.INCIDENT_RESULT_CODE, intent); //The data you want to send back
+                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
                 finish();
-                //ChannelNotification notification = new ChannelNotification();
-                //notification.createNotification(getApplicationContext(),getClass());
                 break;
             case R.id.voitureButtonAccident:
                 editorBouton.putString("valeurBoutonVehicule", "automobile");

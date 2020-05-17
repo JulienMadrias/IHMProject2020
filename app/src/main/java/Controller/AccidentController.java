@@ -24,7 +24,6 @@ public class AccidentController extends AlertController implements IAlertControl
         this.iAccidentModelView = iAccidentModelView;
     }
     public ArrayList<Accident> get() {
-        //recupPref();
         Log.d("jiv","récupération  des accidents...");
         ArrayList<Accident> Accidents = new ArrayList<>();
         try{

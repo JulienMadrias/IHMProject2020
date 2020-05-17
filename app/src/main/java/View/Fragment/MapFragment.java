@@ -74,7 +74,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     private Animation fabOpenAnim, fabCloseAnim, floatButtonOpen, floatButtonClose, centerButtonOpen, centerButtonClose;
 
     private boolean isAddEventsOpen;
-    private int notificationId = 0;
+    private int notificationId = 3;
 
     private IButtonMapListener mCallBack;
     private Location currentLocation, savedLocation;
@@ -421,9 +421,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                     new ItemizedIconOverlay.OnItemGestureListener<OverlayItem>() {
                         @Override
                         public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-                            Intent intent=new Intent(getContext(), AlertDetails.class);
+                            // Intent intent=new Intent(getContext(), AlertDetails.class);
                             // intent.putExtra("code", getKey(items,item));
-                            startActivity(intent);
+                            // startActivity(intent);
                             return true;
                         }
                         @Override

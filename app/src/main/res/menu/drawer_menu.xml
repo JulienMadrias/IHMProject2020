@@ -16,26 +16,40 @@
             <item android:id="@+id/nav_transport_mode"
                 android:icon="@drawable/ic_directions_car_black_24dp"
                 android:title="Mode de transport"/>
-            <item android:id="@+id/language"
+            <item
+                app:actionLayout="@layout/switch_item"
+                android:icon="@drawable/ic_pin_drop_black_24dp"
+                android:id="@+id/SwitchGPS"
+                android:title="Activer le suivi GPS"/>
+            <item
+                android:id="@+id/language"
                 android:icon="@drawable/ic_public_black_24dp"
                 android:title="Langue"
                 app:actionLayout="@layout/drop_down_list" >
 
             </item>
-            <item
-                app:actionLayout="@layout/switch_item"
-                android:id="@+id/SwitchGPS"
-                android:title="Activer le suivi GPS"/>
-            <item
-                android:icon="@drawable/ic_call_gray_24dp"
-                android:id="@+id/callEmergency"
-                android:title="Appeler les urgence"/>
-            <item
-                android:icon="@drawable/twitter"
-                android:id="@+id/twitterButton"
-                android:title="Nous suivre sur Twiter"/>
 
         </menu>
     </item>
 
+    <item android:title="Autres">
+    <menu>
+        <item
+            android:icon="@drawable/ic_call_gray_24dp"
+            android:id="@+id/callEmergency"
+            android:title="Appeler les urgences"/>
+        <item
+            android:icon="@drawable/twitter"
+            android:id="@+id/twitterButton"
+            android:title="Nous suivre sur Twiter"/>
+        <item
+            android:icon="@drawable/ic_share_black_24dp"
+            android:id="@+id/shareAppli"
+            android:title="Partager l'application"/>
+        <item
+            android:icon="@drawable/ic_close"
+            android:id="@+id/stopAppli"
+            android:title="Quitter"/>
+    </menu>
+    </item>
 </menu>

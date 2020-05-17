@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -193,6 +194,19 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
         }
     }
 
+    private void sendDanger(String channelId, int priority){
+        Bitmap icon = BitmapFactory.decodeResource(this.getApplicationContext().getResources(),
+                R.drawable.ic_traffic_jam_svgrepo_com_marker);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this.getApplicationContext(),channelId)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Inforamtion !")
+                .setContentText("Publication d'incident effectuée")
+                .setLargeIcon(icon)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Incident publié avc succès"))
+                .setPriority(priority);
+        ChannelNotification.getNotificationManager().notify(2,notification.build());
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -207,6 +221,7 @@ public class IncidentActivity extends AppCompatActivity implements IButtonIncide
                 editorBouton.clear();
                 editorBouton.commit();
                 Toast.makeText(this,"Publication de l'incident en cour...",Toast.LENGTH_SHORT).show();
+                sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
                 finish();
                 //ChannelNotification notification = new ChannelNotification();
                 //notification.createNotification(getApplicationContext(),getClass());
