@@ -160,9 +160,9 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
                                             if(getContext()!=null){
                                                 compteurAccidentProche=incidentController.getNumberOfAlert();
                                                 compteurIncidentProche=accidentController.getNumberOfAlert();
-                                                if(compteurIncidentProche!=0||compteurAccidentProche!=0){
+
                                                     sendDanger("channel1", NotificationCompat.PRIORITY_DEFAULT);
-                                                }
+
                                             }
 
                                         }
@@ -317,7 +317,7 @@ public class MapFragment extends Fragment implements View.OnClickListener, Locat
     }
     private String getAlertNotification(){
         return "Attention nous avons détecté "+(compteurAccidentProche>0&&compteurIncidentProche>0?
-                compteurAccidentProche+" accidents "+" et "+compteurIncidentProche+"incidents":
+                compteurAccidentProche+" accidents "+" et "+compteurIncidentProche+" incidents":
                 compteurAccidentProche>0? compteurAccidentProche+" accidents": compteurIncidentProche+" incidents");
     }
     private void sendDanger(String channelId, int priority){
